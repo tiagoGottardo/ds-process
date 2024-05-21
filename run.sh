@@ -1,1 +1,1 @@
-clear; gcc main.c -o app; ./app
+clear; rm app; gcc main.c -o app; ./app
