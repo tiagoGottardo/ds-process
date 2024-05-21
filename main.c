@@ -208,6 +208,21 @@ BNode *deleteBNode(struct BNode *root, int key) {
   return root;
 }
 
+Node *searchAVL(BNode *root, int pid) {
+  if (!root) {
+    printf("Process not found in AVL Tree!\n");
+    return NULL;
+  }
+
+  if (pid > root->key) {
+    return searchAVL(root->right, pid);
+  } else if (pid < root->key) {
+    return searchAVL(root->left, pid);
+  } else {
+    return root->node;
+  }
+}
+
 void deallocAllTree(BNode *node) {
   if (node) {
     deallocAllTree(node->right);
