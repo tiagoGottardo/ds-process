@@ -44,7 +44,7 @@ Node *newNode(int pid, char *name, State state) {
 BNode *newBNode(int pid, char *name, State state) {
   BNode *bnode = (BNode *)calloc(1, sizeof(BNode));
   if (!bnode) {
-    printf("Error on alloc memory of bnode!");
+    printf("Error on alloc memory of bnode!\n");
     return NULL;
   }
 
@@ -98,7 +98,7 @@ BNode *insertBNode(struct BNode *node, int key, char *name, State state) {
   else if (key > node->key)
     node->right = insertBNode(node->right, key, name, state);
   else {
-    printf("That key already exists!");
+    printf("That key already exists!\n");
     return node;
   }
 
