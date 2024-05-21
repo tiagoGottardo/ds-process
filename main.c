@@ -145,9 +145,9 @@ BNode *minValueNode(struct BNode *node) {
   return current;
 }
 
-void deallocBNode(BNode *bnode) {
-  free(bnode->node);
-  free(bnode);
+void deallocBNode(BNode **bnode) {
+  free((*bnode)->node);
+  free(*bnode);
 }
 
 BNode *deleteBNode(struct BNode *root, int key) {
@@ -171,11 +171,10 @@ BNode *deleteBNode(struct BNode *root, int key) {
       } else
         *root = *temp;
 
-      deallocBNode(temp);
-      // free(temp);
+      deallocBNode(&temp);
     } else {
 
-      struct BNode *temp = minValueNode(root->right);
+      BNode *temp = minValueNode(root->right);
 
       root->key = temp->key;
 
@@ -209,7 +208,15 @@ BNode *deleteBNode(struct BNode *root, int key) {
   return root;
 }
 
-void preOrder(struct BNode *root) {
+void deallocAllTree(BNode *node) {
+  if (node) {
+    deallocAllTree(node->right);
+    deallocAllTree(node->left);
+    deallocBNode(&node);
+  }
+}
+
+void preOrder(BNode *root) {
   if (root != NULL) {
     printf("PID: %d\t | name: %s\t\t\t | state: %s\t | priority: %d\n",
            root->node->pid, root->node->name, displayState(root->node->state),
@@ -224,11 +231,7 @@ int main() {
   node = insertBNode(node, 123, "Word", BLOCKED);
   node = insertBNode(node, 2342, "Excel", EXECUTING);
   Node *newRef = node->right->node;
-  node = deleteBNode(node, 0);
-  node = deleteBNode(node, 2342);
+  deallocAllTree(node);
 
-  preOrder(node);
-
-  printf("\n");
   return 0;
 }
