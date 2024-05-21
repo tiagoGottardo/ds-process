@@ -216,13 +216,16 @@ void deallocAllTree(BNode *node) {
   }
 }
 
-void preOrder(BNode *root) {
+void printNode(Node *node) {
+  printf("PID: %d\t | name: %s\t\t\t | state: %s\t | priority: %d\n", node->pid,
+         node->name, displayState(node->state), node->priority);
+}
+
+void preOrder(BNode *root, void(fn)(Node *node)) {
   if (root != NULL) {
-    printf("PID: %d\t | name: %s\t\t\t | state: %s\t | priority: %d\n",
-           root->node->pid, root->node->name, displayState(root->node->state),
-           root->node->priority);
-    preOrder(root->left);
-    preOrder(root->right);
+    fn(root->node);
+    preOrder(root->left, fn);
+    preOrder(root->right, fn);
   }
 }
 
@@ -230,8 +233,15 @@ int main() {
   BNode *node = NULL;
   node = insertBNode(node, 123, "Word", BLOCKED);
   node = insertBNode(node, 2342, "Excel", EXECUTING);
-  Node *newRef = node->right->node;
-  deallocAllTree(node);
+  Node *newRef;
+  if (!(newRef = searchAVL(node, 12))) {
+    deallocAllTree(node);
+    return 0;
+  }
+
+  printNode(newRef);
+
+  preOrder(node, printNode);
 
   return 0;
 }
