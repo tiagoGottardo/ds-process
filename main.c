@@ -5,13 +5,14 @@
 typedef enum State { BLOCKED, UNBLOCKED, EXECUTING } State;
 
 typedef struct Node {
+  int pid;
   char name[50];
   State state;
   int priority;
 } Node;
 
 typedef struct BNode {
-  int pid;
+  int key;
   Node *node;
   struct BNode *right;
   struct BNode *left;
@@ -26,7 +27,7 @@ int height(struct BNode *N) {
 
 int max(int a, int b) { return (a > b) ? a : b; }
 
-Node *newNode(char *name, State state) {
+Node *newNode(int pid, char *name, State state) {
   Node *node = (Node *)calloc(1, sizeof(Node));
   if (!node) {
     printf("Error on alloc memory of node!");
@@ -34,6 +35,7 @@ Node *newNode(char *name, State state) {
   }
 
   strcpy(node->name, name);
+  node->pid = pid;
   node->state = state;
 
   return node;
@@ -46,10 +48,10 @@ BNode *newBNode(int pid, char *name, State state) {
     return NULL;
   }
 
-  Node *node = newNode(name, state);
+  Node *node = newNode(pid, name, state);
 
   bnode->node = node;
-  bnode->pid = pid;
+  bnode->key = pid;
   bnode->height = 1;
 
   return bnode;
@@ -87,16 +89,16 @@ int getBalance(struct BNode *N) {
   return height(N->left) - height(N->right);
 }
 
-struct BNode *insert(struct BNode *node, int pid, char *name, State state) {
+BNode *insertBNode(struct BNode *node, int key, char *name, State state) {
   if (node == NULL)
-    return (newBNode(pid, name, state));
+    return (newBNode(key, name, state));
 
-  if (pid < node->pid)
-    node->left = insert(node->left, pid, name, state);
-  else if (pid > node->pid)
-    node->right = insert(node->right, pid, name, state);
+  if (key < node->key)
+    node->left = insertBNode(node->left, key, name, state);
+  else if (key > node->key)
+    node->right = insertBNode(node->right, key, name, state);
   else {
-    printf("That PID already exists!");
+    printf("That key already exists!");
     return node;
   }
 
@@ -104,18 +106,18 @@ struct BNode *insert(struct BNode *node, int pid, char *name, State state) {
 
   int balance = getBalance(node);
 
-  if (balance > 1 && pid < node->left->pid)
+  if (balance > 1 && key < node->left->key)
     return rightRotate(node);
 
-  if (balance < -1 && pid > node->right->pid)
+  if (balance < -1 && key > node->right->key)
     return leftRotate(node);
 
-  if (balance > 1 && pid > node->left->pid) {
+  if (balance > 1 && key > node->left->key) {
     node->left = leftRotate(node->left);
     return rightRotate(node);
   }
 
-  if (balance < -1 && pid < node->right->pid) {
+  if (balance < -1 && key < node->right->key) {
     node->right = rightRotate(node->right);
     return leftRotate(node);
   }
@@ -134,10 +136,83 @@ char *displayState(State state) {
   }
 }
 
+BNode *minValueNode(struct BNode *node) {
+  struct BNode *current = node;
+
+  while (current->left != NULL)
+    current = current->left;
+
+  return current;
+}
+
+void deallocBNode(BNode *bnode) {
+  free(bnode->node);
+  free(bnode);
+}
+
+BNode *deleteBNode(struct BNode *root, int key) {
+
+  if (root == NULL)
+    return root;
+
+  if (key < root->key)
+    root->left = deleteBNode(root->left, key);
+
+  else if (key > root->key)
+    root->right = deleteBNode(root->right, key);
+
+  else {
+    if ((root->left == NULL) || (root->right == NULL)) {
+      struct BNode *temp = root->left ? root->left : root->right;
+
+      if (temp == NULL) {
+        temp = root;
+        root = NULL;
+      } else
+        *root = *temp;
+
+      deallocBNode(temp);
+      // free(temp);
+    } else {
+
+      struct BNode *temp = minValueNode(root->right);
+
+      root->key = temp->key;
+
+      root->right = deleteBNode(root->right, temp->key);
+    }
+  }
+
+  if (root == NULL)
+    return root;
+
+  root->height = 1 + max(height(root->left), height(root->right));
+
+  int balance = getBalance(root);
+
+  if (balance > 1 && getBalance(root->left) >= 0)
+    return rightRotate(root);
+
+  if (balance > 1 && getBalance(root->left) < 0) {
+    root->left = leftRotate(root->left);
+    return rightRotate(root);
+  }
+
+  if (balance < -1 && getBalance(root->right) <= 0)
+    return leftRotate(root);
+
+  if (balance < -1 && getBalance(root->right) > 0) {
+    root->right = rightRotate(root->right);
+    return leftRotate(root);
+  }
+
+  return root;
+}
+
 void preOrder(struct BNode *root) {
   if (root != NULL) {
     printf("PID: %d\t | name: %s\t\t\t | state: %s\t | priority: %d\n",
-           root->pid, root->node->name, displayState(root->node->state),
+           root->node->pid, root->node->name, displayState(root->node->state),
            root->node->priority);
     preOrder(root->left);
     preOrder(root->right);
@@ -146,8 +221,11 @@ void preOrder(struct BNode *root) {
 
 int main() {
   BNode *node = NULL;
-  node = insert(node, 123, "Word", BLOCKED);
-  node = insert(node, 2342, "Excel", EXECUTING);
+  node = insertBNode(node, 123, "Word", BLOCKED);
+  node = insertBNode(node, 2342, "Excel", EXECUTING);
+  Node *newRef = node->right->node;
+  node = deleteBNode(node, 0);
+  node = deleteBNode(node, 2342);
 
   preOrder(node);
 
