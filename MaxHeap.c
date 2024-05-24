@@ -77,6 +77,25 @@ void insertMaxHeap(MaxHeap *heap, Node *new) {
   }
 }
 
+void deleteByPriorityMaxHeap(MaxHeap *heap, int priority) {
+  if (heap && heap->vector) {
+    if (!heap->index) {
+      printf("Heap is empty!\n");
+      return;
+    }
+    int i = 0;
+    for (i = 0; i < heap->index; i++) {
+      if (priority == heap->vector[i].priority)
+        break;
+    }
+
+    int root = heap->vector->priority;
+    heap->vector[i] = heap->vector[heap->index - 1];
+    heap->index--;
+    heapify(heap, 1);
+  }
+}
+
 int deleteMaxHeap(MaxHeap *heap) {
   if (heap && heap->vector) {
     if (!heap->index) {

@@ -42,7 +42,7 @@ BNode *newBNode(int pid, char *name, State state, int priority) {
   return bnode;
 }
 
-struct BNode *rightRotate(struct BNode *y) {
+BNode *rightRotate(BNode *y) {
   struct BNode *x = y->left;
   struct BNode *T2 = x->right;
 
@@ -55,7 +55,7 @@ struct BNode *rightRotate(struct BNode *y) {
   return x;
 }
 
-struct BNode *leftRotate(struct BNode *x) {
+BNode *leftRotate(BNode *x) {
   struct BNode *y = x->right;
   struct BNode *T2 = y->left;
 
@@ -68,14 +68,13 @@ struct BNode *leftRotate(struct BNode *x) {
   return y;
 }
 
-int getBalance(struct BNode *N) {
+int getBalance(BNode *N) {
   if (N == NULL)
     return 0;
   return height(N->left) - height(N->right);
 }
 
-BNode *insertAVL(struct BNode *node, int key, char *name, State state,
-                 int priority) {
+BNode *insertAVL(BNode *node, int key, char *name, State state, int priority) {
   if (node == NULL)
     return (newBNode(key, name, state, priority));
 
@@ -122,7 +121,7 @@ char *displayState(State state) {
   }
 }
 
-BNode *minValueNode(struct BNode *node) {
+BNode *minValueNode(BNode *node) {
   struct BNode *current = node;
 
   while (current->left != NULL)
@@ -225,6 +224,12 @@ void printNode(Node *node) {
            node->pid, node->name, displayState(node->state), node->priority);
   }
 }
+
+// void changePriority(BNode *tree, int pid, int newPriority) {
+//   Node *node = searchAVL(tree, pid);
+//   (*node).priority = newPriority;
+//   // printNode(node);
+// }
 
 void preOrder(BNode *root, void(fn)(Node *node)) {
   if (root) {

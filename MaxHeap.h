@@ -13,3 +13,4 @@ void insertMaxHeap(MaxHeap *heap, Node *newNode);
 int deleteMaxHeap(MaxHeap *heap);
 void printMaxHeap(MaxHeap *heap);
 void deallocMaxHeap(MaxHeap *heap);
+void heapify(MaxHeap *heap, int i);

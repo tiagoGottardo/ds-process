@@ -51,3 +51,4 @@ void deallocAllTree(BNode **node);
 void printNode(Node *node);
 
 void preOrder(BNode *root, void(fn)(Node *node));
+void changePriority(BNode *tree, int pid, int newPriority);
