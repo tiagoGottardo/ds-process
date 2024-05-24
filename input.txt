@@ -1,0 +1,49 @@
+//Inicialização do sistema operacional simulador.
+
+Iniciar
+
+//AVL(Gerenciamento de Processos)
+
+InserirAVL 1 EditorTexto 10 PRONTO
+InserirAVL 2 Compilador 5 PRONTO
+InserirAVL 3 NavegadorWeb 8 PRONTO
+ListarAVL  
+TerminarAVL 2
+ListarAVL
+
+//Heap(Gerenciamento de Prioridades)
+
+AlterarHeap  1 8
+AlterarHeap 3 6
+AlterarHeap 1 3
+ListarHeap
+RemoverHeap
+ListarHeap
+
+//Tabela Hash(Gerenciamento de Estados)
+
+BloquearHash 3 
+ListarHash PRONTO
+ListarHash BLOQUEADO
+DesbloquearHash 3 
+ListarHash PRONTO
+RemoverHash 1
+ListarHash PRONTO
+
+//Simulação de Ações e Estados
+
+Executar 3 
+ListarHash EXECUCAO
+InserirAVL 4 Antivirus 4 PRONTO
+AlterarHeap 4 4
+ListarAVL  
+AlterarHeap 4 2
+RemoverHeap  
+BloquearHash 4 Antivirus
+ListarHash BLOQUEADO
+
+//Encerramento do Sistema
+
+Terminar 3 NavegadorWeb
+Terminar 4 Antivirus
+Encerrar
