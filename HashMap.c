@@ -124,9 +124,10 @@ void diagnosticHashMap(HashMap *map) {
 
   for (int i = 0; i < map->capacity; i++) {
     if (map->entries[i].key) {
-      printf("%s -> %d\n", map->entries[i].key, (*map->entries[i].value));
+      printf("[%d] | %s -> %d\n", i, map->entries[i].key,
+             (*map->entries[i].value));
     } else {
-      printf("Nothing on this bucket\n");
+      printf("[%d] Nothing here\n", i);
     }
   }
 }
