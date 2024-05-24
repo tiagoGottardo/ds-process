@@ -225,12 +225,6 @@ void printNode(Node *node) {
   }
 }
 
-// void changePriority(BNode *tree, int pid, int newPriority) {
-//   Node *node = searchAVL(tree, pid);
-//   (*node).priority = newPriority;
-//   // printNode(node);
-// }
-
 void preOrder(BNode *root, void(fn)(Node *node)) {
   if (root) {
     fn(root->node);
