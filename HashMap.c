@@ -1,10 +1,5 @@
 #include "HashMap.h"
 
-#define INITIAL_CAPACITY 16
-
-#define FNV_OFFSET 14695981039346656037UL
-#define FNV_PRIME 1099511628211UL
-
 uint64_t hash_key(const char *key) {
   uint64_t hash = FNV_OFFSET;
   for (const char *p = key; *p; p++) {
@@ -16,7 +11,7 @@ uint64_t hash_key(const char *key) {
 
 HashMap *newHashMap() {
 
-  HashMap *map = malloc(sizeof(HashMap));
+  HashMap *map = calloc(1, sizeof(HashMap));
   if (!map)
     return NULL;
 
@@ -54,63 +49,72 @@ int *getHashMap(HashMap *map, char *key) {
   return NULL;
 }
 
-void setEntryHashMap(HashMap *map, char *key, int *value) {
+char *setEntryHashMap(Entry *entries, char *key, int *value, int capacity,
+                      int *plength) {
   uint64_t hash = hash_key(key);
-  int index = (uint64_t)(hash & (map->capacity - 1));
+  size_t index = (size_t)(hash & (uint64_t)(capacity - 1));
 
-  while (map->entries[index].key) {
-    if (!strcmp(key, map->entries[index].key)) {
-      map->entries[index].value = value;
-      return;
+  while (entries[index].key != NULL) {
+    if (strcmp(key, entries[index].key) == 0) {
+      entries[index].value = value;
+      return entries[index].key;
     }
 
-    index = (index + 1) % map->capacity;
+    index = (index + 1) % capacity;
   }
 
-  key = strdup(key);
-  if (!key)
-    return;
-  map->length++;
+  if (plength) {
+    key = strdup(key);
+    if (!key)
+      return NULL;
 
-  map->entries[index].key = key;
-  map->entries[index].value = value;
+    (*plength)++;
+  }
+
+  entries[index].key = (char *)key;
+  entries[index].value = value;
+  return key;
 }
 
-HashMap *expandHashMap(HashMap *map) {
-  int newCapacity = map->capacity * 2;
-
-  HashMap *newMap = calloc(1, sizeof(HashMap));
-
-  Entry *newEntries = calloc(newCapacity, sizeof(Entry));
-  if (!newEntries)
-    return NULL;
-
-  newMap->capacity = newCapacity;
-  newMap->entries = newEntries;
-  newMap->length = 0;
+bool expandHashMap(HashMap *map) {
+  int new_capacity = map->capacity * 2;
+  if (new_capacity < map->capacity) {
+    return false;
+  }
+  Entry *new_entries = calloc(new_capacity, sizeof(Entry));
+  if (!new_entries)
+    return false;
 
   for (int i = 0; i < map->capacity; i++) {
     Entry entry = map->entries[i];
 
     if (entry.key) {
-      setEntryHashMap(newMap, entry.key, entry.value);
+      setEntryHashMap(new_entries, entry.key, entry.value, new_capacity, NULL);
     }
   }
 
-  deallocHashMap(map);
+  free(map->entries);
 
-  return newMap;
+  map->entries = new_entries;
+  map->capacity = new_capacity;
+
+  return true;
 }
 
 bool setHashMap(HashMap *map, char *key, int *value) {
+
   if (!value)
     return false;
 
-  if (map->length == map->capacity)
-    if (!(map = expandHashMap(map)))
+  if (map->length == map->capacity) {
+    if (!expandHashMap(map)) {
       return false;
+    } else {
+      printf("Chegamos aq1\n");
+    }
+  }
 
-  setEntryHashMap(map, key, value);
+  setEntryHashMap(map->entries, key, value, map->capacity, &map->length);
   return true;
 }
 
