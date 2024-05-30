@@ -1,6 +1,15 @@
 #include "Process.h"
 
-void InitializeSystem(System * system){return;}
+void InitializeSystem(System * system){
+
+    system->map = newHashMap();
+    system->heap = newMaxHeap(100);
+    system->avl = NULL;
+
+    printf("Sistema Iniciado :)\n");
+
+    return;
+}
 
 void AddProcess(int pid, char *name, int priority, State state, System * system){return;}
 void SystemProcess(System * system){return;}

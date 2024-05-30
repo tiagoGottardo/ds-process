@@ -69,7 +69,7 @@ void readFile(System * system) {
 
 void callFunctions(char **elements, int numElements, System * system) {
   FnInfo map[] = {
-      {"Iniciar", 1, (ParameterType[]){TIPO_INT}, InitializeSystem},
+      {"Iniciar", 0, (ParameterType[]){TIPO_INT}, InitializeSystem},
       {"InserirAVL", 4,
        (ParameterType[]){
            TIPO_INT,
@@ -94,7 +94,7 @@ void callFunctions(char **elements, int numElements, System * system) {
         return;
       }
 
-      void **parameters = malloc(map[i].numParameters * sizeof(void *));
+      void **parameters = malloc((map[i].numParameters+1) * sizeof(void *));
 
       for (int j = 0; j < map[i].numParameters; ++j) {
         switch (map[i].parametersTypes[j]) {
@@ -112,7 +112,7 @@ void callFunctions(char **elements, int numElements, System * system) {
         }
       }
 
-      map[i].fn(parameters);
+      map[i].fn(parameters, system);
 
       for (int j = 0; j < map[i].numParameters; ++j) {
         free(parameters[j]);
