@@ -9,7 +9,7 @@ typedef struct {
   void (*fn)();
 } FnInfo;
 
-void callFunctions(char **elementos, int numElementos);
-void readFile();
+void callFunctions(char **elementos, int numElementos, System * system);
+void readFile(System * system);
 void separaelementos();
 void SeparaElementos(const char *linha, char ***elementos, int *numElementos);

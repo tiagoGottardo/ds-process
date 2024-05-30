@@ -1,3 +1,10 @@
+#include <stdio.h>
+
 #include "Main.h"
 
-int main() { return 0; }
+int main() {
+    System * system = NULL;
+    readFile(system);
+
+    return 0;    
+}

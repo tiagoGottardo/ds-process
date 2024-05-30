@@ -33,7 +33,7 @@ void splitElements(const char *line, char ***elements, int *numElements) {
   free(secCopyLine);
 }
 
-void readFile() {
+void readFile(System * system) {
   FILE *file = fopen("input.txt", "r");
 
   if (file == NULL) {
@@ -48,7 +48,7 @@ void readFile() {
     char **elements;
     splitElements(line, &elements, &numElements);
 
-    callFunctions(elements, numElements);
+    callFunctions(elements, numElements, system);
 
     for (int i = 0; i < numElements; i++) {
       free(elements[i]);
@@ -62,7 +62,7 @@ void readFile() {
   return;
 }
 
-void callFunctions(char **elements, int numElements) {
+void callFunctions(char **elements, int numElements, System * system) {
   FnInfo map[] = {
       {"Iniciar", 1, (ParameterType[]){TIPO_INT}, InitializeSystem},
       {"InserirAVL", 4,
