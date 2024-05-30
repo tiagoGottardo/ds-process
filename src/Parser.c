@@ -7,7 +7,9 @@
 void splitElements(const char *line, char ***elements, int *numElements) {
   if (!line)
     return;
-
+  if(line[0]=='\n'||(strncmp(line, "//", 2) == 0)){
+    return;
+  }
   *numElements = 0;
 
   char *copyLine = strdup(line);
@@ -44,16 +46,19 @@ void readFile(System * system) {
   char line[100];
 
   while (fgets(line, sizeof(line), file) != NULL) {
-    int numElements;
+    int numElements =0;
     char **elements;
     splitElements(line, &elements, &numElements);
 
-    callFunctions(elements, numElements, system);
+    if(numElements){
+      printf("chamando call function com element0: %s\n", elements[0]);
+      callFunctions(elements, numElements, system);
+    }
 
     for (int i = 0; i < numElements; i++) {
       free(elements[i]);
     }
-    free(elements);
+    // free(elements);
   }
 
   fclose(file);
