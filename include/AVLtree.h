@@ -1,3 +1,6 @@
+#ifndef AVLTREE_H
+#define AVLTREE_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -50,3 +53,6 @@ void deallocAllTree(BNode **node);
 void printNode(Node *node);
 
 void preOrder(BNode *root, void(fn)(Node *node));
+
+#endif
+

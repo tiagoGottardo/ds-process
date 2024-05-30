@@ -1,3 +1,6 @@
+#ifndef PARSER_H
+#define PARSER_H
+
 #include "Process.h"
 
 typedef enum { TIPO_INT, TIPO_STRING } ParameterType;
@@ -13,3 +16,6 @@ void callFunctions(char **elementos, int numElementos, System * system);
 void readFile(System * system);
 void separaelementos();
 void SeparaElementos(const char *linha, char ***elementos, int *numElementos);
+
+#endif
+

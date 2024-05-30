@@ -1,3 +1,5 @@
+#ifndef HASHMAP_H
+#define HASHMAP_H
 #include "MaxHeap.h"
 
 #include <stdbool.h>
@@ -31,3 +33,6 @@ void setEntryHashMap(HashMap *map, char *key, int *value);
 HashMap *expandHashMap(HashMap *map);
 bool setHashMap(HashMap *map, char *key, int *value);
 void diagnosticHashMap(HashMap *map);
+
+#endif
+

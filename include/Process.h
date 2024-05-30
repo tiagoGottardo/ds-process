@@ -1,12 +1,6 @@
 #include "state.h"
-
+#include "Main.h"
 typedef struct System System;
-
-// typedef struct {
-//   HashMap map;
-//   MaxHeap heap;
-//   BNode avl;
-// } System;
 
 void InitializeSystem(System * system);
 
