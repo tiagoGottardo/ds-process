@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-typedef enum State { BLOCKED, UNBLOCKED, EXECUTING } State;
+#include <state.h>
 
 typedef struct Node {
   int pid;
