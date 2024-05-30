@@ -1,5 +1,6 @@
+#include "state.h"
+
 typedef struct System System;
-typedef struct State State;
 
 // typedef struct {
 //   HashMap map;
@@ -7,16 +8,16 @@ typedef struct State State;
 //   BNode avl;
 // } System;
 
-System *InitializeSystem();
+void InitializeSystem(System * system);
 
-void *AddProcess(int pid, char *name, int priority, State state);
-void SystemProcess();
-void RemoveProcess(int pid);
-void ListProcessByPid();
-void ChangePriority(int pid, int newPriority);
-void RemoveProcessOfMaxPriority();
-void ListProcessByPriority();
-void ChangeState(int pid, State to);
-void ListProcessByState(State state);
+void AddProcess(int pid, char *name, int priority, State state, System * system);
+void SystemProcess(System * system);
+void RemoveProcess(int pid,System * system);
+void ListProcessByPid(System * system);
+void ChangePriority(int pid, int newPriority, System * system);
+void RemoveProcessOfMaxPriority(System * system);
+void ListProcessByPriority(System * system);
+void ChangeState(int pid, State to, System * system);
+void ListProcessByState(State state, System * system);
 
-void FinalizeSystem();
+void FinalizeSystem(System * system);
