@@ -1,4 +1,5 @@
 #include "HashMap.h"
+#include <string.h>
 
 uint64_t hash_key(const char *key) {
   uint64_t hash = FNV_OFFSET;
@@ -10,7 +11,6 @@ uint64_t hash_key(const char *key) {
 }
 
 HashMap *newHashMap() {
-
   HashMap *map = calloc(1, sizeof(HashMap));
   if (!map)
     return NULL;
@@ -78,9 +78,9 @@ char *setEntryHashMap(Entry *entries, char *key, int *value, int capacity,
 
 bool expandHashMap(HashMap *map) {
   int new_capacity = map->capacity * 2;
-  if (new_capacity < map->capacity) {
+  if (new_capacity < map->capacity)
     return false;
-  }
+
   Entry *new_entries = calloc(new_capacity, sizeof(Entry));
   if (!new_entries)
     return false;
@@ -101,24 +101,66 @@ bool expandHashMap(HashMap *map) {
   return true;
 }
 
-bool setHashMap(HashMap *map, char *key, int *value) {
-
-  if (!value)
+bool setHashMap(HashMap *map, char *key, void *value) {
+  if (!value || !key || !map)
     return false;
 
-  if (map->length == map->capacity) {
-    if (!expandHashMap(map)) {
+  if (map->length == map->capacity)
+    if (!expandHashMap(map))
       return false;
-    } else {
-      printf("Chegamos aq1\n");
-    }
-  }
 
   setEntryHashMap(map->entries, key, value, map->capacity, &map->length);
   return true;
 }
 
-void diagnosticHashMap(HashMap *map) {
+char *displayState(State state) {
+  switch (state) {
+  case BLOCKED:
+    return "BLOCKED";
+    break;
+  case UNBLOCKED:
+    return "UNBLOCKED";
+    break;
+  case EXECUTING:
+    return "EXECUTING";
+    break;
+  }
+}
+
+void printProcess(Node *node) {
+  if (node) {
+    printf("PID: %d\t | name: %-25s \t | state: %s\t | "
+           "priority: %d\n",
+           node->pid, node->name, displayState(node->state), node->priority);
+  }
+}
+
+void showHashMapByState(HashMap *map, State state) {
+  if (!map || !map->entries)
+    return;
+  for (int i = 0; i < map->capacity; i++) {
+    if (((Node *)map->entries[i].value))
+      if (((Node *)map->entries[i].value)->state == state)
+        printProcess((Node *)map->entries[i].value);
+  }
+}
+
+void showHashMap(HashMap *map, TypeEntry type) {
+  switch (type) {
+  case PROCESS:
+    for (int i = 0; i < map->capacity; i++) {
+      printProcess((Node *)map->entries[i].value);
+    }
+    break;
+  case FUNCTION:
+    // for (int i = 0; i < map->capacity; i++) {
+    //     printNode((Node *)map->entries[i].value);
+    // }
+    break;
+  }
+}
+
+void diagnosticHashMap(HashMap *map, TypeEntry type) {
   if (!map)
     return;
 
@@ -126,12 +168,5 @@ void diagnosticHashMap(HashMap *map) {
   printf("Map size: %d\n", map->length);
   printf("Map capacity: %d\n", map->capacity);
 
-  for (int i = 0; i < map->capacity; i++) {
-    if (map->entries[i].key) {
-      printf("[%d] | %s -> %d\n", i, map->entries[i].key,
-             (*map->entries[i].value));
-    } else {
-      printf("[%d] Nothing here\n", i);
-    }
-  }
+  showHashMap(map, type);
 }
