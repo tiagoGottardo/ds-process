@@ -1,4 +1,10 @@
+<<<<<<< HEAD:include/HashMap.h
+#ifndef HASHMAP_H
+#define HASHMAP_H
+#include "MaxHeap.h"
+=======
 #include "AVLtree.h"
+>>>>>>> upstream/master:HashMap.h
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -27,7 +33,18 @@ typedef struct {
 HashMap *newHashMap();
 void showHashMapByState(HashMap *map, State state);
 void deallocHashMap(HashMap *map);
+<<<<<<< HEAD:include/HashMap.h
+int *getHashMap(HashMap *map, char *key);
+void setEntryHashMap(HashMap *map, char *key, int *value);
+HashMap *expandHashMap(HashMap *map);
+bool setHashMap(HashMap *map, char *key, int *value);
+void diagnosticHashMap(HashMap *map);
+
+#endif
+
+=======
 void *getHashMap(HashMap *map, char *key);
 bool expandHashMap(HashMap *map);
 bool setHashMap(HashMap *map, char *key, void *value);
 void diagnosticHashMap(HashMap *map, TypeEntry type);
+>>>>>>> upstream/master:HashMap.h

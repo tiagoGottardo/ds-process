@@ -130,6 +130,20 @@ int deleteMaxHeap(MaxHeap *heap) {
   return -1;
 }
 
+<<<<<<< HEAD:src/MaxHeap.c
+char *displayStateMH(State state) {
+  switch (state) {
+  case BLOCKED:
+    return "BLOCKED";
+  case UNBLOCKED:
+    return "UBLOCKED";
+  case EXECUTING:
+    return "EXECUTING";
+  }
+}
+
+=======
+>>>>>>> upstream/master:MaxHeap.c
 void printMaxHeap(MaxHeap *heap) {
   if (heap && heap->vector) {
     if (!heap->index) {
@@ -139,7 +153,7 @@ void printMaxHeap(MaxHeap *heap) {
       for (int i = 0; i < heap->index; i++) {
         printf("PID: %d\t | name: %s\t\t\t | state: %s\t | priority: %d\n",
                heap->vector[i].pid, heap->vector[i].name,
-               displayState(heap->vector[i].state), heap->vector[i].priority);
+               displayStateMH(heap->vector[i].state), heap->vector[i].priority);
       }
       printf("\n");
     }
