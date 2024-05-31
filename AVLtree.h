@@ -5,7 +5,7 @@
 typedef enum State { BLOCKED, UNBLOCKED, EXECUTING } State;
 typedef struct Node {
   int pid;
-  char name[50];
+  char *name;
   State state;
   int priority;
 } Node;
@@ -18,19 +18,18 @@ typedef struct BNode {
   int height;
 } BNode;
 
-int height(struct BNode *N);
+int height(BNode *N);
 int max(int a, int b);
 Node *newNode(int pid, char *name, State state, int priority);
-BNode *newBNode(int pid, char *name, State state, int priority);
-BNode *rightRotate(struct BNode *y);
-BNode *leftRotate(struct BNode *x);
-int getBalance(struct BNode *N);
-BNode *insertAVL(struct BNode *node, int key, char *name, State state,
-                 int priority);
+BNode *newBNode(int pid, Node *node);
+BNode *rightRotate(BNode *y);
+BNode *leftRotate(BNode *x);
+int getBalance(BNode *N);
+BNode *insertAVL(BNode *bnode, int key, Node *node);
 char *displayState(State state);
-BNode *minValueNode(struct BNode *node);
+BNode *minValueNode(BNode *node);
 void deallocBNode(BNode **bnode);
-BNode *deleteAVL(struct BNode *root, int key);
+BNode *deleteAVL(BNode *root, int key);
 Node *searchAVL(BNode *root, int pid);
 void deallocAllTree(BNode **node);
 void printNode(Node *node);

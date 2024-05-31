@@ -1,28 +1,22 @@
 #include "Process.h"
 #include <stdlib.h>
 
-void Quit() {
-  printf("Program finalized!\n");
-  exit(0);
-}
+void Clear() { system("clear"); }
 
 HashMap *InitializeFunctions() {
   HashMap *fnMap = newHashMap();
-  Function listFunctions[11] = {
-      {"SystemProcess", SystemProcess},
-      {"AddProcess", AddProcess},
-      {"RemoveProcess", RemoveProcess},
-      {"ListProcessByPid", ListProcessByPid},
-      {"ChangePriority", ChangePriority},
-      {"RemoveProcessOfMaxPriority", RemoveProcessOfMaxPriority},
-      {"ListProcessByPriority", ListProcessByPriority},
-      {"ChangeState", ChangeState},
-      {"ListProcessByState", ListProcessByState},
-      {"FinalizeSystem", FinalizeSystem},
-      {"q", Quit},
-  };
+  Function listFunctions[10] = {{"add", AddProcess},
+                                {"list", ListAVLProcess},
+                                {"remove", RemoveProcess},
+                                {"changePriority", ChangePriority},
+                                {"removePriority", RemoveProcessOfMaxPriority},
+                                {"listByPriority", ListProcessByPriority},
+                                {"changeState", ChangeState},
+                                {"listByState", ListProcessByState},
+                                {"q", FinalizeSystem},
+                                {"clear", Clear}};
 
-  for (int i = 0; i < 11; i++)
+  for (int i = 0; i < 10; i++)
     setHashMap(fnMap, listFunctions[i].name, listFunctions[i].fn);
 
   return fnMap;
@@ -35,7 +29,7 @@ System *InitializeSystem() {
   sys->map2 = newHashMap();
   sys->map3 = newHashMap();
   sys->functions = InitializeFunctions();
-  sys->avl = insertAVL(sys->avl, 34, "firefox", BLOCKED, 34);
+
   // it could not be hardcoded
   sys->heap = newMaxHeap();
   return sys;
@@ -43,7 +37,7 @@ System *InitializeSystem() {
 
 int evalInt(char *s) {
   if (!s)
-    printf("Some Error");
+    printf("Params not found!");
 
   int result = atoi(s);
   if (!result && s[0] != '0')
@@ -82,6 +76,14 @@ void AddProcess(System *sys, char **params) {
   int priority = evalInt(params[3]);
   State state = evalState(params[4]);
 
+  Node *node = newNode(pid, name, state, priority);
+
+  sys->avl = insertAVL(sys->avl, pid, node);
+  setHashMap(sys->map1, node->name, node);
+  setHashMap(sys->map2, node->name, node);
+  setHashMap(sys->map3, node->name, node);
+  insertMaxHeap(sys->heap, node);
+
   printf("AddProcess called!\n");
   printf("Pid: %d\n", pid);
   printf("name: %s\n", name);
@@ -89,8 +91,12 @@ void AddProcess(System *sys, char **params) {
   printf("state: %s\n", displayState(state));
 }
 
-void SystemProcess(System *sys, char **params) {
-  printf("SystemProcess called!\n");
+void ListAVLProcess(System *sys, char **params) {
+  if (!sys->avl)
+    printf("Nothing here yet!\n");
+  else
+    preOrder(sys->avl, printProcess);
+  printf("ListProcess called!\n");
 }
 
 void RemoveProcess(System *sys, char **params) {
@@ -98,6 +104,15 @@ void RemoveProcess(System *sys, char **params) {
     return;
 
   int pid = evalInt(params[1]);
+
+  Node *node = searchAVL(sys->avl, pid);
+  if (node) {
+    setHashMap(sys->map1, node->name, NULL);
+    setHashMap(sys->map2, node->name, NULL);
+    setHashMap(sys->map3, node->name, NULL);
+    deleteByPriorityMaxHeap(sys->heap, node->priority);
+    sys->avl = deleteAVL(sys->avl, node->pid);
+  }
 
   printf("RemoveProcess called!\n");
   printf("Pid: %d\n", pid);
@@ -114,16 +129,27 @@ void ChangePriority(System *sys, char **params) {
   int pid = evalInt(params[1]);
   int newPriority = evalInt(params[2]);
 
+  Node *node = searchAVL(sys->avl, pid);
+  if (node) {
+    deleteByPriorityMaxHeap(sys->heap, node->priority);
+    node->priority = newPriority;
+    insertMaxHeap(sys->heap, node);
+  } else {
+    printf("Process of P");
+  }
+
   printf("ChangePriority called!\n");
   printf("Pid: %d\n", pid);
   printf("NewPriority: %d\n", newPriority);
 }
 
 void RemoveProcessOfMaxPriority(System *sys, char **params) {
+  deleteMaxHeap(sys->heap);
   printf("RemoveProcessOfMaxPriority called!\n");
 }
 
 void ListProcessByPriority(System *sys, char **params) {
+  printMaxHeap(sys->heap);
   printf("RemoveProcessOfMaxPriority called!\n");
 }
 
@@ -132,7 +158,10 @@ void ChangeState(System *sys, char **params) {
     return;
 
   int pid = evalInt(params[1]);
-  int to = evalInt(params[2]);
+  int to = evalState(params[2]);
+
+  Node *node = searchAVL(sys->avl, pid);
+  node->state = to;
 
   printf("ChangePriority called!\n");
   printf("Pid: %d\n", pid);
@@ -140,7 +169,22 @@ void ChangeState(System *sys, char **params) {
 }
 
 void ListProcessByState(System *sys, char **params) {
+  if (!checkParams(params, 1))
+    return;
+
+  State state = evalState(params[1]);
+
+  showHashMapByState(sys->map1, state);
   printf("ListProcessByPriority called!\n");
 }
 
-void FinalizeSystem(System *sys, char **params) {}
+void FinalizeSystem(System *sys, char **params) {
+  deallocAllTree(&sys->avl);
+  deallocHashMap(sys->map1);
+  deallocHashMap(sys->map2);
+  deallocHashMap(sys->map3);
+  deallocMaxHeap(sys->heap);
+  printf("Program finalized!\n");
+
+  exit(0);
+}

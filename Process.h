@@ -19,7 +19,7 @@ typedef struct {
 
 System *InitializeSystem();
 void AddProcess(System *sys, char **params);
-void SystemProcess(System *sys, char **params);
+void ListAVLProcess(System *sys, char **params);
 void RemoveProcess(System *sys, char **params);
 void ListProcessByPid(System *sys, char **params);
 void ChangePriority(System *sys, char **params);

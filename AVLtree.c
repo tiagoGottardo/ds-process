@@ -17,6 +17,7 @@ Node *newNode(int pid, char *name, State state, int priority) {
     printf("Error on alloc memory of node!");
     return NULL;
   }
+  node->name = (char *)calloc(strlen(name), sizeof(char));
 
   strcpy(node->name, name);
   node->pid = pid;
@@ -26,14 +27,12 @@ Node *newNode(int pid, char *name, State state, int priority) {
   return node;
 }
 
-BNode *newBNode(int pid, char *name, State state, int priority) {
+BNode *newBNode(int pid, Node *node) {
   BNode *bnode = (BNode *)calloc(1, sizeof(BNode));
   if (!bnode) {
     printf("Error on alloc memory of bnode!\n");
     return NULL;
   }
-
-  Node *node = newNode(pid, name, state, priority);
 
   bnode->node = node;
   bnode->key = pid;
@@ -74,40 +73,40 @@ int getBalance(BNode *N) {
   return height(N->left) - height(N->right);
 }
 
-BNode *insertAVL(BNode *node, int key, char *name, State state, int priority) {
-  if (node == NULL)
-    return (newBNode(key, name, state, priority));
+BNode *insertAVL(BNode *bnode, int key, Node *node) {
+  if (bnode == NULL)
+    return (newBNode(key, node));
 
-  if (key < node->key)
-    node->left = insertAVL(node->left, key, name, state, priority);
-  else if (key > node->key)
-    node->right = insertAVL(node->right, key, name, state, priority);
+  if (key < bnode->key)
+    bnode->left = insertAVL(bnode->left, key, node);
+  else if (key > bnode->key)
+    bnode->right = insertAVL(bnode->right, key, node);
   else {
     printf("That key already exists!\n");
-    return node;
+    return bnode;
   }
 
-  node->height = 1 + max(height(node->left), height(node->right));
+  bnode->height = 1 + max(height(bnode->left), height(bnode->right));
 
-  int balance = getBalance(node);
+  int balance = getBalance(bnode);
 
-  if (balance > 1 && key < node->left->key)
-    return rightRotate(node);
+  if (balance > 1 && key < bnode->left->key)
+    return rightRotate(bnode);
 
-  if (balance < -1 && key > node->right->key)
-    return leftRotate(node);
+  if (balance < -1 && key > bnode->right->key)
+    return leftRotate(bnode);
 
-  if (balance > 1 && key > node->left->key) {
-    node->left = leftRotate(node->left);
-    return rightRotate(node);
+  if (balance > 1 && key > bnode->left->key) {
+    bnode->left = leftRotate(bnode->left);
+    return rightRotate(bnode);
   }
 
-  if (balance < -1 && key < node->right->key) {
-    node->right = rightRotate(node->right);
-    return leftRotate(node);
+  if (balance < -1 && key < bnode->right->key) {
+    bnode->right = rightRotate(bnode->right);
+    return leftRotate(bnode);
   }
 
-  return node;
+  return bnode;
 }
 
 char *displayState(State state) {
@@ -139,7 +138,7 @@ void deallocBNode(BNode **bnode) {
 
 BNode *deleteAVL(struct BNode *root, int key) {
 
-  if (root == NULL)
+  if (!root)
     return root;
 
   if (key < root->key)
@@ -215,13 +214,6 @@ void deallocAllTree(BNode **node) {
     deallocAllTree(&(*node)->right);
     deallocAllTree(&(*node)->left);
     deallocBNode(node);
-  }
-}
-
-void printNode(Node *node) {
-  if (node) {
-    printf("PID: %d\t | name: %s\t\t\t | state: %s\t | priority: %d\n",
-           node->pid, node->name, displayState(node->state), node->priority);
   }
 }
 
