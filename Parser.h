@@ -1,5 +1,3 @@
-// #include "Process.h"
-
 typedef enum { TIPO_INT, TIPO_STRING } ParameterType;
 
 typedef struct {
