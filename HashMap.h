@@ -14,7 +14,7 @@ uint64_t hash_key(const char *key);
 
 typedef struct {
   char *key;
-  int *value;
+  void *value;
 } Entry;
 
 typedef struct {

@@ -35,7 +35,7 @@ void deallocHashMap(HashMap *map) {
   free(map);
 }
 
-int *getHashMap(HashMap *map, char *key) {
+void *getHashMap(HashMap *map, char *key) {
   uint64_t hash = hash_key(key);
   int index = (hash & (map->capacity - 1));
 
@@ -49,7 +49,7 @@ int *getHashMap(HashMap *map, char *key) {
   return NULL;
 }
 
-char *setEntryHashMap(Entry *entries, char *key, int *value, int capacity,
+char *setEntryHashMap(Entry *entries, char *key, void *value, int capacity,
                       int *plength) {
   uint64_t hash = hash_key(key);
   size_t index = (size_t)(hash & (uint64_t)(capacity - 1));
