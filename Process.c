@@ -1,21 +1,28 @@
 #include "Process.h"
 #include <stdlib.h>
 
+void Quit() {
+  printf("Program finalized!\n");
+  exit(0);
+}
+
 HashMap *InitializeFunctions() {
   HashMap *fnMap = newHashMap();
-  Function listFunctions[10] = {
-      {"SystemProcess", SystemProcess}, {"AddProcess", AddProcess},
-      //     {"RemoveProcess", RemoveProcess},
-      //     {"ListProcessByPid", ListProcessByPid},
-      //     {"ChangePriority", ChangePriority},
-      //     {"RemoveProcessOfMaxPriority", RemoveProcessOfMaxPriority},
-      //     {"ListProcessByPriority", ListProcessByPriority},
-      //     {"ChangeState", ChangeState},
-      //     {"ListProcessByState", ListProcessByState},
-      //     {"FinalizeSystem", FinalizeSystem},
+  Function listFunctions[11] = {
+      {"SystemProcess", SystemProcess},
+      {"AddProcess", AddProcess},
+      {"RemoveProcess", RemoveProcess},
+      {"ListProcessByPid", ListProcessByPid},
+      {"ChangePriority", ChangePriority},
+      {"RemoveProcessOfMaxPriority", RemoveProcessOfMaxPriority},
+      {"ListProcessByPriority", ListProcessByPriority},
+      {"ChangeState", ChangeState},
+      {"ListProcessByState", ListProcessByState},
+      {"FinalizeSystem", FinalizeSystem},
+      {"q", Quit},
   };
 
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < 11; i++)
     setHashMap(fnMap, listFunctions[i].name, listFunctions[i].fn);
 
   return fnMap;
@@ -56,14 +63,84 @@ State evalState(char *s) {
   return BLOCKED;
 }
 
-void AddProcess(System *sys, char **parameters) {
-  char *name = parameters[0];
-  int number = evalInt(parameters[1]);
-  printf("AddProcess called!\n");
-  printf("Parameter 0 -> %s\n", name);
-  printf("Parameter 1 -> %d\n", number);
+bool checkParams(char **params, int num) {
+  for (int i = 1; i <= num; i++)
+    if (!params[i]) {
+      printf("We need more params\n");
+      return false;
+    }
+
+  return true;
 }
 
-void SystemProcess(System *sys, char **parameters) {
+void AddProcess(System *sys, char **params) {
+  if (!checkParams(params, 4))
+    return;
+
+  int pid = evalInt(params[1]);
+  char *name = params[2];
+  int priority = evalInt(params[3]);
+  State state = evalState(params[4]);
+
+  printf("AddProcess called!\n");
+  printf("Pid: %d\n", pid);
+  printf("name: %s\n", name);
+  printf("priority: %d\n", priority);
+  printf("state: %s\n", displayState(state));
+}
+
+void SystemProcess(System *sys, char **params) {
   printf("SystemProcess called!\n");
 }
+
+void RemoveProcess(System *sys, char **params) {
+  if (!checkParams(params, 1))
+    return;
+
+  int pid = evalInt(params[1]);
+
+  printf("RemoveProcess called!\n");
+  printf("Pid: %d\n", pid);
+}
+
+void ListProcessByPid(System *sys, char **params) {
+  printf("ListProcessByPid called!\n");
+}
+
+void ChangePriority(System *sys, char **params) {
+  if (!checkParams(params, 2))
+    return;
+
+  int pid = evalInt(params[1]);
+  int newPriority = evalInt(params[2]);
+
+  printf("ChangePriority called!\n");
+  printf("Pid: %d\n", pid);
+  printf("NewPriority: %d\n", newPriority);
+}
+
+void RemoveProcessOfMaxPriority(System *sys, char **params) {
+  printf("RemoveProcessOfMaxPriority called!\n");
+}
+
+void ListProcessByPriority(System *sys, char **params) {
+  printf("RemoveProcessOfMaxPriority called!\n");
+}
+
+void ChangeState(System *sys, char **params) {
+  if (!checkParams(params, 2))
+    return;
+
+  int pid = evalInt(params[1]);
+  int to = evalInt(params[2]);
+
+  printf("ChangePriority called!\n");
+  printf("Pid: %d\n", pid);
+  printf("To: %d\n", to);
+}
+
+void ListProcessByState(System *sys, char **params) {
+  printf("ListProcessByPriority called!\n");
+}
+
+void FinalizeSystem(System *sys, char **params) {}
