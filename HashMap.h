@@ -1,10 +1,8 @@
-#include "MaxHeap.h"
+#include "AVLtree.h"
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 #define INITIAL_CAPACITY 16
 
 #define FNV_OFFSET 14695981039346656037UL

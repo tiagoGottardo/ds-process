@@ -3,7 +3,6 @@
 #include <string.h>
 
 typedef enum State { BLOCKED, UNBLOCKED, EXECUTING } State;
-
 typedef struct Node {
   int pid;
   char name[50];

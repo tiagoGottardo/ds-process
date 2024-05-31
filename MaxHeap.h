@@ -1,4 +1,4 @@
-#include "AVLtree.h"
+#include "HashMap.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -8,7 +8,7 @@ typedef struct {
   int capacity;
 } MaxHeap;
 
-MaxHeap *newMaxHeap(int capacity);
+MaxHeap *newMaxHeap();
 void insertMaxHeap(MaxHeap *heap, Node *newNode);
 int deleteMaxHeap(MaxHeap *heap);
 void printMaxHeap(MaxHeap *heap);

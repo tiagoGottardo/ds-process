@@ -1,26 +1,18 @@
 #include "Process.h"
 #include <stdlib.h>
 
-typedef void(Fn)(System, char **);
-
-typedef struct {
-  char *name;
-  void (*fn)(System, char **);
-} Function;
-
 HashMap *InitializeFunctions() {
   HashMap *fnMap = newHashMap();
   Function listFunctions[10] = {
-      {"SystemProcess", SystemProcess},
-      {"AddProcess", AddProcess},
-      {"RemoveProcess", RemoveProcess},
-      {"ListProcessByPid", ListProcessByPid},
-      {"ChangePriority", ChangePriority},
-      {"RemoveProcessOfMaxPriority", RemoveProcessOfMaxPriority},
-      {"ListProcessByPriority", ListProcessByPriority},
-      {"ChangeState", ChangeState},
-      {"ListProcessByState", ListProcessByState},
-      {"FinalizeSystem", FinalizeSystem},
+      {"SystemProcess", SystemProcess}, {"AddProcess", AddProcess},
+      //     {"RemoveProcess", RemoveProcess},
+      //     {"ListProcessByPid", ListProcessByPid},
+      //     {"ChangePriority", ChangePriority},
+      //     {"RemoveProcessOfMaxPriority", RemoveProcessOfMaxPriority},
+      //     {"ListProcessByPriority", ListProcessByPriority},
+      //     {"ChangeState", ChangeState},
+      //     {"ListProcessByState", ListProcessByState},
+      //     {"FinalizeSystem", FinalizeSystem},
   };
 
   for (int i = 0; i < 10; i++)
@@ -36,8 +28,9 @@ System *InitializeSystem() {
   sys->map2 = newHashMap();
   sys->map3 = newHashMap();
   sys->functions = InitializeFunctions();
+  sys->avl = insertAVL(sys->avl, 34, "firefox", BLOCKED, 34);
   // it could not be hardcoded
-  sys->heap = newMaxHeap(16);
+  sys->heap = newMaxHeap();
   return sys;
 }
 
@@ -63,7 +56,7 @@ State evalState(char *s) {
   return BLOCKED;
 }
 
-void AddProcess(System sys, char **parameters) {
+void AddProcess(System *sys, char **parameters) {
   char *name = parameters[0];
   int number = evalInt(parameters[1]);
   printf("AddProcess called!\n");
@@ -71,6 +64,6 @@ void AddProcess(System sys, char **parameters) {
   printf("Parameter 1 -> %d\n", number);
 }
 
-void SystemProcess(System sys, char **parameters) {
-  printf("AddProcess called!");
+void SystemProcess(System *sys, char **parameters) {
+  printf("SystemProcess called!\n");
 }

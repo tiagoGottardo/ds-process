@@ -1,4 +1,4 @@
-#include "HashMap.h"
+#include "MaxHeap.h"
 
 typedef struct {
   HashMap *map1;
@@ -10,11 +10,12 @@ typedef struct {
   HashMap *functions;
 } System;
 
-// typedef struct {
-//   HashMap map;
-//   MaxHeap heap;
-//   BNode avl;
-// } System;
+typedef void(Fn)(System *, char **);
+
+typedef struct {
+  char *name;
+  void (*fn)(System *, char **);
+} Function;
 
 System *InitializeSystem();
 
@@ -28,13 +29,13 @@ System *InitializeSystem();
 // void ChangeState(System sys, int pid, State to);
 // void ListProcessByState(System sys, State state);
 
-void AddProcess(System sys, char **parameters);
-void SystemProcess(System sys, char **parameters);
-void RemoveProcess(System sys, char **parameters);
-void ListProcessByPid(System sys, char **parameters);
-void ChangePriority(System sys, char **parameters);
-void RemoveProcessOfMaxPriority(System sys, char **parameters);
-void ListProcessByPriority(System sys, char **parameters);
-void ChangeState(System sys, char **parameters);
-void ListProcessByState(System sys, char **parameters);
-void FinalizeSystem(System sys, char **parameters);
+void AddProcess(System *sys, char **parameters);
+void SystemProcess(System *sys, char **parameters);
+void RemoveProcess(System *sys, char **parameters);
+void ListProcessByPid(System *sys, char **parameters);
+void ChangePriority(System *sys, char **parameters);
+void RemoveProcessOfMaxPriority(System *sys, char **parameters);
+void ListProcessByPriority(System *sys, char **parameters);
+void ChangeState(System *sys, char **parameters);
+void ListProcessByState(System *sys, char **parameters);
+void FinalizeSystem(System *sys, char **parameters);

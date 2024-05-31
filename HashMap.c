@@ -1,6 +1,10 @@
 #include "HashMap.h"
 #include <string.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 uint64_t hash_key(const char *key) {
   uint64_t hash = FNV_OFFSET;
   for (const char *p = key; *p; p++) {
@@ -111,20 +115,6 @@ bool setHashMap(HashMap *map, char *key, void *value) {
 
   setEntryHashMap(map->entries, key, value, map->capacity, &map->length);
   return true;
-}
-
-char *displayState(State state) {
-  switch (state) {
-  case BLOCKED:
-    return "BLOCKED";
-    break;
-  case UNBLOCKED:
-    return "UNBLOCKED";
-    break;
-  case EXECUTING:
-    return "EXECUTING";
-    break;
-  }
 }
 
 void printProcess(Node *node) {
