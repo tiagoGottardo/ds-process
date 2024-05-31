@@ -1,9 +1,44 @@
 #include "Process.h"
 #include <stdlib.h>
 
+typedef void(Fn)(System, char **);
+
+typedef struct {
+  char *name;
+  void (*fn)(System, char **);
+} Function;
+
+HashMap *InitializeFunctions() {
+  HashMap *fnMap = newHashMap();
+  Function listFunctions[10] = {
+      {"SystemProcess", SystemProcess},
+      {"AddProcess", AddProcess},
+      {"RemoveProcess", RemoveProcess},
+      {"ListProcessByPid", ListProcessByPid},
+      {"ChangePriority", ChangePriority},
+      {"RemoveProcessOfMaxPriority", RemoveProcessOfMaxPriority},
+      {"ListProcessByPriority", ListProcessByPriority},
+      {"ChangeState", ChangeState},
+      {"ListProcessByState", ListProcessByState},
+      {"FinalizeSystem", FinalizeSystem},
+  };
+
+  for (int i = 0; i < 10; i++)
+    setHashMap(fnMap, listFunctions[i].name, listFunctions[i].fn);
+
+  return fnMap;
+};
+
 System *InitializeSystem() {
-  ;
-  return NULL;
+  System *sys = (System *)calloc(1, sizeof(System));
+
+  sys->map1 = newHashMap();
+  sys->map2 = newHashMap();
+  sys->map3 = newHashMap();
+  sys->functions = InitializeFunctions();
+  // it could not be hardcoded
+  sys->heap = newMaxHeap(16);
+  return sys;
 }
 
 int evalInt(char *s) {

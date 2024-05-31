@@ -1,13 +1,13 @@
 #include "HashMap.h"
 
 typedef struct {
-  HashMap map1;
-  HashMap map2;
-  HashMap map3;
-  BNode avl;
-  MaxHeap heap;
+  HashMap *map1;
+  HashMap *map2;
+  HashMap *map3;
+  BNode *avl;
+  MaxHeap *heap;
 
-  HashMap functions;
+  HashMap *functions;
 } System;
 
 // typedef struct {
@@ -33,7 +33,7 @@ void SystemProcess(System sys, char **parameters);
 void RemoveProcess(System sys, char **parameters);
 void ListProcessByPid(System sys, char **parameters);
 void ChangePriority(System sys, char **parameters);
-void RemoveProcessOfMaxPriority(System sys);
+void RemoveProcessOfMaxPriority(System sys, char **parameters);
 void ListProcessByPriority(System sys, char **parameters);
 void ChangeState(System sys, char **parameters);
 void ListProcessByState(System sys, char **parameters);
