@@ -1,4 +1,4 @@
-#include "Process.h"
+// #include "Process.h"
 
 typedef enum { TIPO_INT, TIPO_STRING } ParameterType;
 
@@ -9,7 +9,9 @@ typedef struct {
   void (*fn)();
 } FnInfo;
 
-void callFunctions(char **elementos, int numElementos);
-void readFile();
-void separaelementos();
-void SeparaElementos(const char *linha, char ***elementos, int *numElementos);
+char **split(char *s);
+// void callFunctions(char **elementos, int numElementos);
+// void readFile();
+// void separaelementos();
+// void SeparaElementos(const char *linha, char ***elementos, int
+// *numElementos);
