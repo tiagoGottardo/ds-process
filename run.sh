@@ -1,24 +1,31 @@
-gcc -c AVLtree.c -o AVLtree.o;
-ar rcs avl_tree.a AVLtree.o;
+#!/bin/bash
 
-gcc -c HashMap.c -o HashMap.o;
-ar rcs hash_map.a HashMap.o;
+# Nome do projeto
+PROJECT_NAME="dsprocess"
 
-gcc -c MaxHeap.c -o MaxHeap.o;
-ar rcs max_heap.a MaxHeap.o;
+# Diretórios
+INCLUDE_DIR="include"
+SRC_DIR="src"
+BUILD_DIR="build"
 
-gcc -c Process.c -o Process.o;
-ar rcs process.a Process.o;
+# Verificar se a pasta build existe, se não, criar
+if [ ! -d "$BUILD_DIR" ]; then
+  echo "Criando diretório de build..."
+  mkdir "$BUILD_DIR"
+fi
 
-gcc -c Parser.c -o Parser.o;
-ar rcs parser.a Parser.o;
+# Compilar os arquivos .c em objetos .o
+echo "Compilando arquivos .c..."
+for file in $SRC_DIR/*.c; do
+  # Extrair o nome do arquivo sem extensão
+  filename=$(basename "$file" .c)
+  # Compilar o arquivo .c em um objeto .o
+  gcc -c "$file" -I"$INCLUDE_DIR" -o "$BUILD_DIR/$filename.o"
+done
 
-rm app; 
-gcc main.c -o app \
-  -L/home/tiagopg/projects/ds-process -l:process.a \
-  -L/home/tiagopg/projects/ds-process -l:hash_map.a \
-  -L/home/tiagopg/projects/ds-process -l:avl_tree.a \
-  -L/home/tiagopg/projects/ds-process -l:max_heap.a \
-  -L/home/tiagopg/projects/ds-process -l:parser.a \
-  ;
-./app;
+# Linkar os objetos .o para criar o executável
+echo "Linkando objetos para criar o executável..."
+gcc "$BUILD_DIR"/*.o -o "$BUILD_DIR/$PROJECT_NAME"
+
+# Mensagem de sucesso
+echo "Build concluído com sucesso! O executável está em $BUILD_DIR/$PROJECT_NAME"
