@@ -1,7 +1,11 @@
+<<<<<<< HEAD:include/MaxHeap.h
 #ifndef MAXHEAP_H
 #define MAXHEAP_H
 
 #include "AVLtree.h"
+=======
+#include "HashMap.h"
+>>>>>>> upstream/master:MaxHeap.h
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -11,7 +15,7 @@ typedef struct {
   int capacity;
 } MaxHeap;
 
-MaxHeap *newMaxHeap(int capacity);
+MaxHeap *newMaxHeap();
 void insertMaxHeap(MaxHeap *heap, Node *newNode);
 int deleteMaxHeap(MaxHeap *heap);
 void printMaxHeap(MaxHeap *heap);

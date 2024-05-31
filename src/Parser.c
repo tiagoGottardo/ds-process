@@ -4,6 +4,7 @@
 
 #include "Parser.h"
 
+<<<<<<< HEAD:src/Parser.c
 void splitElements(const char *line, char ***elements, int *numElements) {
   if (!line)
     return;
@@ -17,34 +18,47 @@ void splitElements(const char *line, char ***elements, int *numElements) {
 
   while (tokenCount != NULL) {
     (*numElements)++;
+=======
+char **split(char *s) {
+  if (!s || s[0] == '/') {
+    printf("Empty input!");
+    return NULL;
+  }
+
+  int tokensCounter = 0;
+  char *copyS = strdup(s);
+  char *tokenCount = strtok(copyS, " ,()\n");
+  while (tokenCount) {
+>>>>>>> upstream/master:Parser.c
     tokenCount = strtok(NULL, " ,()\n");
+    tokensCounter++;
   }
 
-  free(copyLine);
+  char **result = (char **)calloc(tokensCounter, sizeof(char *));
+  copyS = strdup(s);
+  result[0] = strtok(copyS, " ,()\n");
+  for (int i = 1; i < tokensCounter; i++)
+    result[i] = strtok(NULL, " ,()\n");
 
-  *elements = (char **)malloc(*numElements * sizeof(char *));
-
-  char *secCopyLine = strdup(line);
-  char *token = strtok(secCopyLine, " ,()\n");
-
-  for (int i = 0; i < *numElements; i++) {
-    (*elements)[i] = strdup(token);
-    token = strtok(NULL, " ,()\n");
-  }
-
-  free(secCopyLine);
+  return result;
 }
 
+<<<<<<< HEAD:src/Parser.c
 void readFile(System * system) {
   FILE *file = fopen("input.txt", "r");
+=======
+// void readFile() {
+//   FILE *file = fopen("input.txt", "r");
+>>>>>>> upstream/master:Parser.c
 
-  if (file == NULL) {
-    // logErro();
-    return;
-  }
+//   if (file == NULL) {
+//     // logErro();
+//     return;
+//   }
 
-  char line[100];
+//   char line[100];
 
+<<<<<<< HEAD:src/Parser.c
   while (fgets(line, sizeof(line), file) != NULL) {
     int numElements =0;
     char **elements;
@@ -60,10 +74,25 @@ void readFile(System * system) {
     }
     // free(elements);
   }
+=======
+//   while (fgets(line, sizeof(line), file) != NULL) {
+//     int numElements;
+//     char **elements;
+//     splitElements(line, &elements, &numElements);
 
-  fclose(file);
-  file = NULL;
+//     callFunctions(elements, numElements);
 
+//     for (int i = 0; i < numElements; i++) {
+//       free(elements[i]);
+//     }
+//     free(elements);
+//   }
+>>>>>>> upstream/master:Parser.c
+
+//   fclose(file);
+//   file = NULL;
+
+<<<<<<< HEAD:src/Parser.c
   return;
 }
 
@@ -127,3 +156,7 @@ void callFunctions(char **elements, int numElements, System * system) {
   printf("\n That function doesn't exists.\n\n");
   return;
 }
+=======
+//   return;
+// }
+>>>>>>> upstream/master:Parser.c

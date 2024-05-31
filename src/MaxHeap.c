@@ -36,11 +36,11 @@ void heapify(MaxHeap *heap, int i) {
   }
 }
 
-MaxHeap *newMaxHeap(int capacity) {
+MaxHeap *newMaxHeap() {
   MaxHeap *heap = (MaxHeap *)malloc(sizeof(MaxHeap));
-  heap->vector = (Node *)malloc(capacity * sizeof(Node));
+  heap->vector = (Node *)malloc(16 * sizeof(Node));
   heap->index = 0;
-  heap->capacity = capacity;
+  heap->capacity = 16;
   return heap;
 }
 
@@ -130,6 +130,7 @@ int deleteMaxHeap(MaxHeap *heap) {
   return -1;
 }
 
+<<<<<<< HEAD:src/MaxHeap.c
 char *displayStateMH(State state) {
   switch (state) {
   case BLOCKED:
@@ -141,6 +142,8 @@ char *displayStateMH(State state) {
   }
 }
 
+=======
+>>>>>>> upstream/master:MaxHeap.c
 void printMaxHeap(MaxHeap *heap) {
   if (heap && heap->vector) {
     if (!heap->index) {

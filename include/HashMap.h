@@ -1,12 +1,14 @@
+<<<<<<< HEAD:include/HashMap.h
 #ifndef HASHMAP_H
 #define HASHMAP_H
 #include "MaxHeap.h"
+=======
+#include "AVLtree.h"
+>>>>>>> upstream/master:HashMap.h
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 #define INITIAL_CAPACITY 16
 
 #define FNV_OFFSET 14695981039346656037UL
@@ -14,9 +16,11 @@
 
 uint64_t hash_key(const char *key);
 
+typedef enum TypeEntry { PROCESS, FUNCTION } TypeEntry;
+
 typedef struct {
   char *key;
-  int *value;
+  void *value;
 } Entry;
 
 typedef struct {
@@ -27,7 +31,9 @@ typedef struct {
 } HashMap;
 
 HashMap *newHashMap();
+void showHashMapByState(HashMap *map, State state);
 void deallocHashMap(HashMap *map);
+<<<<<<< HEAD:include/HashMap.h
 int *getHashMap(HashMap *map, char *key);
 void setEntryHashMap(HashMap *map, char *key, int *value);
 HashMap *expandHashMap(HashMap *map);
@@ -36,3 +42,9 @@ void diagnosticHashMap(HashMap *map);
 
 #endif
 
+=======
+void *getHashMap(HashMap *map, char *key);
+bool expandHashMap(HashMap *map);
+bool setHashMap(HashMap *map, char *key, void *value);
+void diagnosticHashMap(HashMap *map, TypeEntry type);
+>>>>>>> upstream/master:HashMap.h
