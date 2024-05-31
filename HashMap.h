@@ -5,12 +5,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define INITIAL_CAPACITY 4
+#define INITIAL_CAPACITY 16
 
 #define FNV_OFFSET 14695981039346656037UL
 #define FNV_PRIME 1099511628211UL
 
 uint64_t hash_key(const char *key);
+
+typedef enum TypeEntry { PROCESS, FUNCTION } TypeEntry;
 
 typedef struct {
   char *key;
@@ -25,8 +27,9 @@ typedef struct {
 } HashMap;
 
 HashMap *newHashMap();
+void showHashMapByState(HashMap *map, State state);
 void deallocHashMap(HashMap *map);
-int *getHashMap(HashMap *map, char *key);
+void *getHashMap(HashMap *map, char *key);
 bool expandHashMap(HashMap *map);
-bool setHashMap(HashMap *map, char *key, int *value);
-void diagnosticHashMap(HashMap *map);
+bool setHashMap(HashMap *map, char *key, void *value);
+void diagnosticHashMap(HashMap *map, TypeEntry type);
