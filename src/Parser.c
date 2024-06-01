@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "Parser.h"
+#include "../include/Parser.h"
 
 char **split(char *s) {
   if (!s || s[0] == '/') {

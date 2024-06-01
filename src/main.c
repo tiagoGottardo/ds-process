@@ -1,5 +1,5 @@
-#include "Parser.h"
-#include "Process.h"
+#include "../include/Parser.h"
+#include "../include/Process.h"
 
 int main() {
   System *sys = InitializeSystem();

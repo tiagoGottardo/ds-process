@@ -1,4 +1,4 @@
-#include "Process.h"
+#include "../include/Process.h"
 #include <stdlib.h>
 
 void Clear() { system("clear"); }
@@ -51,7 +51,7 @@ State evalState(char *s) {
   char *states[3] = {"EXECUTING", "BLOCKED", "UNBLOCKED"};
   for (int i = 0; i < 3; i++) {
     if (!strcmp(states[i], s)) {
-      return EXECUTING;
+      return BLOCKED;
     }
   }
   return BLOCKED;
@@ -135,7 +135,7 @@ void ChangePriority(System *sys, char **params) {
     node->priority = newPriority;
     insertMaxHeap(sys->heap, node);
   } else {
-    printf("Process of P");
+    printf("Process not found!");
   }
 
   printf("ChangePriority called!\n");
