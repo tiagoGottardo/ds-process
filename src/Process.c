@@ -173,6 +173,8 @@ void FinalizeSystem(System *sys, char **params) {
   deallocHashMap(sys->map2);
   deallocHashMap(sys->map3);
   deallocMaxHeap(sys->heap);
+  free(params);
+  
   printf("Program finalized!\n");
 
   exit(0);
