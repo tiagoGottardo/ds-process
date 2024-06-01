@@ -219,8 +219,8 @@ void deallocAllTree(BNode **node) {
 
 void preOrder(BNode *root, void(fn)(Node *node)) {
   if (root) {
-    fn(root->node);
     preOrder(root->left, fn);
+    fn(root->node);
     preOrder(root->right, fn);
   }
 }
