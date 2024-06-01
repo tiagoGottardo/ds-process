@@ -1,5 +1,5 @@
 
-typedef enum State { BLOCKED, UNBLOCKED, EXECUTING } State;
+typedef enum State { BLOCKED, READY, EXECUTING, UNKNOWN } State;
 typedef struct Node {
   int pid;
   char *name;

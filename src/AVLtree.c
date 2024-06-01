@@ -41,7 +41,7 @@ BNode *newBNode(int pid, Node *node) {
   return bnode;
 }
 
-Node *rightRotate(BNode *y) {
+BNode *rightRotate(BNode *y) {
   BNode *x = y->left;
   BNode *T2 = x->right;
 
@@ -113,10 +113,12 @@ char *displayState(State state) {
   switch (state) {
   case BLOCKED:
     return "BLOCKED";
-  case UNBLOCKED:
-    return "UBLOCKED";
+  case READY:
+    return "READY";
   case EXECUTING:
     return "EXECUTING";
+  case UNKNOWN:
+    return "UNKNOWN";
   }
 }
 

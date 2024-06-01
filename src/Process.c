@@ -46,19 +46,25 @@ int evalInt(char *s) {
   int result = atoi(s);
   if (!result && s[0] != '0')
     printf("%s is not a number\n", s);
+  if (result <= 0) {
+    printf("Just positive numbers!\n");
+    result = 0;
+  }
 
   return result;
 }
 
-// not finished
 State evalState(char *s) {
-  char *states[3] = {"EXECUTING", "BLOCKED", "UNBLOCKED"};
-  for (int i = 0; i < 3; i++) {
-    if (!strcmp(states[i], s)) {
-      return BLOCKED;
-    }
+  if (!strcmp(s, "BLOCKED")) {
+    return BLOCKED;
+  } else if (!strcmp(s, "READY")) {
+    return READY;
+  } else if (!strcmp(s, "EXECUTING"))
+    return EXECUTING;
+  else {
+    printf("That's not a valid state!\n");
+    return UNKNOWN;
   }
-  return BLOCKED;
 }
 
 bool checkParams(char **params, int num) {
@@ -79,6 +85,8 @@ void AddProcess(System *sys, char **params) {
   char *name = params[2];
   int priority = evalInt(params[3]);
   State state = evalState(params[4]);
+  if (!pid || !priority || state == UNKNOWN)
+    return;
 
   Node *node = newNode(pid, name, state, priority);
 
@@ -108,6 +116,8 @@ void RemoveProcess(System *sys, char **params) {
     return;
 
   int pid = evalInt(params[1]);
+  if (!pid)
+    return;
 
   Node *node = searchAVL(sys->avl, pid);
   if (node) {
@@ -127,6 +137,8 @@ void ChangePriority(System *sys, char **params) {
 
   int pid = evalInt(params[1]);
   int newPriority = evalInt(params[2]);
+  if (!pid || !newPriority)
+    return;
 
   Node *node = searchAVL(sys->avl, pid);
   if (node) {
@@ -171,6 +183,8 @@ void ChangeState(System *sys, char **params) {
 
   int pid = evalInt(params[1]);
   int to = evalState(params[2]);
+  if (!pid || !to)
+    return;
 
   Node *node = searchAVL(sys->avl, pid);
   if (!node) {
@@ -184,6 +198,8 @@ void ListProcessByState(System *sys, char **params) {
   if (!checkParams(params, 1))
     return;
   State state = evalState(params[1]);
+  if (state == UNKNOWN)
+    return;
 
   if (!sys->map1->length) {
     printf("Nothing here yet!\n");
