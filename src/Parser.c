@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "Parser.h"
+#include "../include/Parser.h"
 
 char **split(char *s) {
   if (!s || s[0] == '/') {
@@ -18,9 +18,11 @@ char **split(char *s) {
     tokensCounter++;
   }
 
+  free(copyS);
+  
   char **result = (char **)calloc(tokensCounter, sizeof(char *));
-  copyS = strdup(s);
-  result[0] = strtok(copyS, " ,()\n");
+  char *copyS2 = strdup(s);
+  result[0] = strtok(copyS2, " ,()\n");
   for (int i = 1; i < tokensCounter; i++)
     result[i] = strtok(NULL, " ,()\n");
 

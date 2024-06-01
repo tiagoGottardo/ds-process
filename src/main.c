@@ -1,5 +1,5 @@
-#include "Parser.h"
-#include "Process.h"
+#include "../include/Parser.h"
+#include "../include/Process.h"
 
 int main() {
   System *sys = InitializeSystem();
@@ -17,6 +17,7 @@ int main() {
       continue;
     }
     (*fn)(sys, parameters);
+    free(parameters);
   }
   return 0;
 }
