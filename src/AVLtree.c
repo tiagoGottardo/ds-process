@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-<<<<<<< HEAD
 DicioState diciostate[] = {
     {"BLOCKED", BLOCKED},
     {"UNBLOCKED", UNBLOCKED},
@@ -23,12 +22,8 @@ State evalState(char *s) {
 
 int height(struct BNode *N) {
   if (N == NULL)
-=======
-int height(BNode *bnode) {
-  if (!bnode)
->>>>>>> upstream/master
     return 0;
-  return bnode->height;
+  return N->height;
 }
 
 int max(int a, int b) { return (a > b) ? a : b; }
