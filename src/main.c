@@ -23,7 +23,7 @@ int main() {
   char input[150];
   printf("======================== Init =========================\n");
   char *scripts[] = {
-      "add 1 Chrome 7 REAY",
+      "add 1 Chrome 7 READY",
       "ls",
       "add 1 VisualStudioCode 9 EXECUTING",
       "rm 1",
