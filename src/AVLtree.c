@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-int height(struct BNode *N) {
-  if (N == NULL)
+int height(BNode *bnode) {
+  if (!bnode)
     return 0;
-  return N->height;
+  return bnode->height;
 }
 
 int max(int a, int b) { return (a > b) ? a : b; }
@@ -42,8 +42,8 @@ BNode *newBNode(int pid, Node *node) {
 }
 
 BNode *rightRotate(BNode *y) {
-  struct BNode *x = y->left;
-  struct BNode *T2 = x->right;
+  BNode *x = y->left;
+  BNode *T2 = x->right;
 
   x->right = y;
   y->left = T2;
@@ -55,8 +55,8 @@ BNode *rightRotate(BNode *y) {
 }
 
 BNode *leftRotate(BNode *x) {
-  struct BNode *y = x->right;
-  struct BNode *T2 = y->left;
+  BNode *y = x->right;
+  BNode *T2 = y->left;
 
   y->left = x;
   x->right = T2;
@@ -67,14 +67,14 @@ BNode *leftRotate(BNode *x) {
   return y;
 }
 
-int getBalance(BNode *N) {
-  if (N == NULL)
+int getBalance(BNode *bnode) {
+  if (!bnode)
     return 0;
-  return height(N->left) - height(N->right);
+  return height(bnode->left) - height(bnode->right);
 }
 
 BNode *insertAVL(BNode *bnode, int key, Node *node) {
-  if (bnode == NULL)
+  if (!bnode)
     return (newBNode(key, node));
 
   if (key < bnode->key)
@@ -120,26 +120,27 @@ char *displayState(State state) {
   }
 }
 
-BNode *minValueNode(BNode *node) {
-  struct BNode *current = node;
+BNode *minValueNode(BNode *bnode) {
+  BNode *current = bnode;
 
-  while (current->left != NULL)
+  while (current->left)
     current = current->left;
 
   return current;
 }
+void deallocNode(Node **node) {
+  free(*node);
+  *node = NULL;
+}
 
 void deallocBNode(BNode **bnode) {
-  free((*bnode)->node);
-  (*bnode)->node = NULL;
   free(*bnode);
   *bnode = NULL;
 }
 
-BNode *deleteAVL(struct BNode *root, int key) {
-
+BNode *deleteAVL(BNode *root, int key) {
   if (!root)
-    return root;
+    return NULL;
 
   if (key < root->key)
     root->left = deleteAVL(root->left, key);
@@ -148,28 +149,33 @@ BNode *deleteAVL(struct BNode *root, int key) {
     root->right = deleteAVL(root->right, key);
 
   else {
-    if ((root->left == NULL) || (root->right == NULL)) {
-      struct BNode *temp = root->left ? root->left : root->right;
+    if (!root->left || !root->right) {
+      BNode *temp = root->left ? root->left : root->right;
 
-      if (temp == NULL) {
+      if (!temp) {
         temp = root;
+        deallocNode(&root->node);
         root = NULL;
-      } else
-        *root = *temp;
+      } else {
+        root->node = temp->node;
+        root->left = temp->left;
+        root->right = temp->right;
+        root->key = temp->key;
+      }
 
       deallocBNode(&temp);
     } else {
-
       BNode *temp = minValueNode(root->right);
 
+      root->node = temp->node;
       root->key = temp->key;
 
       root->right = deleteAVL(root->right, temp->key);
     }
   }
 
-  if (root == NULL)
-    return root;
+  if (!root)
+    return NULL;
 
   root->height = 1 + max(height(root->left), height(root->right));
 
@@ -209,11 +215,12 @@ Node *searchAVL(BNode *root, int pid) {
   }
 }
 
-void deallocAllTree(BNode **node) {
-  if (*node) {
-    deallocAllTree(&(*node)->right);
-    deallocAllTree(&(*node)->left);
-    deallocBNode(node);
+void deallocAllTree(BNode **bnode) {
+  if (*bnode) {
+    deallocAllTree(&(*bnode)->right);
+    deallocAllTree(&(*bnode)->left);
+    deallocNode(&(*bnode)->node);
+    deallocBNode(bnode);
   }
 }
 
