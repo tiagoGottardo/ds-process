@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 typedef struct {
-  Node *vector;
+  Node **vector;
   int index;
   int capacity;
 } MaxHeap;

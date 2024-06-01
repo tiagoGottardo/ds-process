@@ -119,8 +119,8 @@ bool setHashMap(HashMap *map, char *key, void *value) {
 
 void printProcess(Node *node) {
   if (node) {
-    printf("PID: %d\t | name: %-25s \t | state: %s\t | "
-           "priority: %d\n",
+    printf("PID: %8d\t | name: %-25s | state: %-20s\t | "
+           "priority: %5d\n",
            node->pid, node->name, displayState(node->state), node->priority);
   }
 }
