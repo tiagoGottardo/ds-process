@@ -34,7 +34,7 @@ Node *newNode(int pid, char *name, State state, int priority) {
     printf("Error on alloc memory of node!");
     return NULL;
   }
-  node->name = (char *)calloc(strlen(name), sizeof(char));
+  node->name = (char *)calloc(strlen(name)+1, sizeof(char));// Adiciona 1 para o caractere nulo
 
   strcpy(node->name, name);
   node->pid = pid;
