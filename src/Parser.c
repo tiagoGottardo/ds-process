@@ -21,9 +21,11 @@ char **split(char *s) {
     tokensCounter++;
   }
 
+  free(copyS);
+  
   char **result = (char **)calloc(tokensCounter, sizeof(char *));
-  copyS = strdup(s);
-  result[0] = strtok(copyS, " ,()\n");
+  char *copyS2 = strdup(s);
+  result[0] = strtok(copyS2, " ,()\n");
   for (int i = 1; i < tokensCounter; i++)
     result[i] = strtok(NULL, " ,()\n");
 

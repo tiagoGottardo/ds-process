@@ -3,10 +3,27 @@
 #include <stdlib.h>
 #include <string.h>
 
-int height(BNode *bnode) {
-  if (!bnode)
+DicioState diciostate[] = {
+    {"BLOCKED", BLOCKED},
+    {"UNBLOCKED", UNBLOCKED},
+    {"EXECUTING", EXECUTING}
+};
+
+State evalState(char *s) {
+
+  for (int i = 0; diciostate[i].name != NULL; i++) {
+    if (strcmp(diciostate[i].name, s) == 0) {
+      return diciostate[i].val;
+    }
+  }
+  
+  return BLOCKED;
+}
+
+int height(struct BNode *N) {
+  if (N == NULL)
     return 0;
-  return bnode->height;
+  return N->height;
 }
 
 int max(int a, int b) { return (a > b) ? a : b; }
@@ -17,7 +34,7 @@ Node *newNode(int pid, char *name, State state, int priority) {
     printf("Error on alloc memory of node!");
     return NULL;
   }
-  node->name = (char *)calloc(strlen(name), sizeof(char));
+  node->name = (char *)calloc(strlen(name)+1, sizeof(char));// Adiciona 1 para o caractere nulo
 
   strcpy(node->name, name);
   node->pid = pid;
@@ -110,16 +127,13 @@ BNode *insertAVL(BNode *bnode, int key, Node *node) {
 }
 
 char *displayState(State state) {
-  switch (state) {
-  case BLOCKED:
-    return "BLOCKED";
-  case READY:
-    return "READY";
-  case EXECUTING:
-    return "EXECUTING";
-  case UNKNOWN:
-    return "UNKNOWN";
+  for (int i = 0; i<(sizeof(diciostate)/sizeof(diciostate[0])); i++) {
+    if (diciostate[i].val == state) {
+      return diciostate[i].name;
+    }
   }
+  
+  return "BLOCKED";
 }
 
 BNode *minValueNode(BNode *bnode) {

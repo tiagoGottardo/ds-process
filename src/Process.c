@@ -54,19 +54,6 @@ int evalInt(char *s) {
   return result;
 }
 
-State evalState(char *s) {
-  if (!strcmp(s, "BLOCKED")) {
-    return BLOCKED;
-  } else if (!strcmp(s, "READY")) {
-    return READY;
-  } else if (!strcmp(s, "EXECUTING"))
-    return EXECUTING;
-  else {
-    printf("That's not a valid state!\n");
-    return UNKNOWN;
-  }
-}
-
 bool checkParams(char **params, int num) {
   for (int i = 1; i <= num; i++)
     if (!params[i]) {
@@ -220,6 +207,8 @@ void FinalizeSystem(System *sys, char **params) {
   deallocHashMap(sys->map3);
   deallocMaxHeap(sys->heap);
   deallocAllTree(&sys->avl);
+  free(params);
+  
   printf("Program finalized!\n");
   exit(0);
 }

@@ -1,4 +1,5 @@
 #include "MaxHeap.h"
+#include "AVLtree.h"
 
 typedef struct {
   HashMap *map1;
