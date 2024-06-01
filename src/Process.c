@@ -1,10 +1,7 @@
 #include "../include/Process.h"
 #include <stdlib.h>
 
-void Clear(System *sys, char **params) {
-  // system("clear");
-  printMaxHeap(sys->heap);
-}
+void Clear(System *sys, char **params) { system("clear"); }
 
 HashMap *InitializeFunctions() {
   HashMap *fnMap = newHashMap();
@@ -111,11 +108,14 @@ void RemoveProcess(System *sys, char **params) {
 
   Node *node = searchAVL(sys->avl, pid);
   if (node) {
+    printf("A process was removed!\n");
     setHashMap(sys->map1, node->name, NULL);
     setHashMap(sys->map2, node->name, NULL);
     setHashMap(sys->map3, node->name, NULL);
     deleteByPriorityMaxHeap(sys->heap, node->priority);
     sys->avl = deleteAVL(sys->avl, node->pid);
+  } else {
+    printf("Process not found!\n");
   }
 }
 

@@ -5,8 +5,12 @@
 #include "../include/Parser.h"
 
 char **split(char *s) {
-  if (!s || s[0] == '/') {
-    printf("Empty input!");
+  if (!s) {
+    printf("Empty input!\n");
+    return NULL;
+  }
+  if (s[0] == '/') {
+    printf("Just a comment!\n");
     return NULL;
   }
 
