@@ -3,12 +3,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-uint64_t hash_key(const char *key) {
+uint64_t fnvHash(const char *key) {
   uint64_t hash = FNV_OFFSET;
   for (const char *p = key; *p; p++) {
     hash ^= (uint64_t)(unsigned char)(*p);
     hash *= FNV_PRIME;
   }
+
+  return hash;
+}
+
+uint64_t djb2Hash(char *key) {
+  uint64_t hash = 5381;
+  int c;
+
+  while ((c = *key++))
+    hash = ((hash << 5) + hash) + c;
+
   return hash;
 }
 
@@ -37,32 +48,53 @@ void deallocHashMap(HashMap *map) {
   free(map);
 }
 
-void *getHashMap(HashMap *map, char *key) {
-  uint64_t hash = hash_key(key);
+void *getHashMap(HashMap *map, char *key, bool isFnv, bool isLinear) {
+  uint64_t hash;
+  if (isFnv)
+    hash = fnvHash(key);
+  else
+    hash = djb2Hash(key);
+
   int index = (hash & (map->capacity - 1));
 
+  int i = 0, initial = index;
   while (map->entries[index].key) {
     if (!strcmp(key, map->entries[index].key))
       return map->entries[index].value;
 
-    index = (index + 1) % map->capacity;
+    if (isLinear)
+      index = (initial + i) % map->capacity;
+    else
+      index = (initial + i * i) % map->capacity;
+
+    i += 1;
   }
 
   return NULL;
 }
 
 char *setEntryHashMap(Entry *entries, char *key, void *value, int capacity,
-                      int *plength) {
-  uint64_t hash = hash_key(key);
-  size_t index = (size_t)(hash & (uint64_t)(capacity - 1));
+                      int *plength, bool isFnv, bool isLinear) {
+  uint64_t hash;
+  if (isFnv)
+    hash = fnvHash(key);
+  else
+    hash = djb2Hash(key);
 
+  size_t index = (size_t)(hash & (uint64_t)(capacity - 1));
+  int i = 0, initial = index;
   while (entries[index].key != NULL) {
     if (strcmp(key, entries[index].key) == 0) {
       entries[index].value = value;
       return entries[index].key;
     }
 
-    index = (index + 1) % capacity;
+    if (isLinear)
+      index = (initial + i) % capacity;
+    else
+      index = (initial + i * i) % capacity;
+
+    i += 1;
   }
 
   if (plength) {
@@ -78,10 +110,15 @@ char *setEntryHashMap(Entry *entries, char *key, void *value, int capacity,
   return key;
 }
 
-void deleteHashMap(HashMap *map, char *key) {
-  uint64_t hash = hash_key(key);
+void deleteHashMap(HashMap *map, char *key, bool isFnv, bool isLinear) {
+  uint64_t hash;
+  if (isFnv)
+    hash = fnvHash(key);
+  else
+    hash = djb2Hash(key);
   size_t index = (size_t)(hash & (uint64_t)(map->capacity - 1));
 
+  int i = 0, initial = index;
   while (map->entries[index].key) {
     if (strcmp(key, map->entries[index].key) == 0) {
       map->entries[index].value = map->entries[index].key = NULL;
@@ -89,11 +126,15 @@ void deleteHashMap(HashMap *map, char *key) {
       return;
     }
 
-    index = (index + 1) % map->capacity;
+    if (isLinear)
+      index = (initial + i) % map->capacity;
+    else
+      index = (initial + i * i) % map->capacity;
+    i += 1;
   }
 }
 
-bool expandHashMap(HashMap *map) {
+bool expandHashMap(HashMap *map, bool isFnv, bool isLinear) {
   int new_capacity = map->capacity * 2;
   if (new_capacity < map->capacity)
     return false;
@@ -106,7 +147,8 @@ bool expandHashMap(HashMap *map) {
     Entry entry = map->entries[i];
 
     if (entry.key)
-      setEntryHashMap(new_entries, entry.key, entry.value, new_capacity, NULL);
+      setEntryHashMap(new_entries, entry.key, entry.value, new_capacity, NULL,
+                      isFnv, isLinear);
   }
 
   free(map->entries);
@@ -117,15 +159,17 @@ bool expandHashMap(HashMap *map) {
   return true;
 }
 
-bool setHashMap(HashMap *map, char *key, void *value) {
+bool setHashMap(HashMap *map, char *key, void *value, bool isFnv,
+                bool isLinear) {
   if (!value || !key || !map)
     return false;
 
   if (map->length == map->capacity)
-    if (!expandHashMap(map))
+    if (!expandHashMap(map, isFnv, isLinear))
       return false;
 
-  setEntryHashMap(map->entries, key, value, map->capacity, &map->length);
+  setEntryHashMap(map->entries, key, value, map->capacity, &map->length, isFnv,
+                  isLinear);
   return true;
 }
 
@@ -144,9 +188,4 @@ void showHashMapByState(HashMap *map, State state) {
     if ((Node *)map->entries[i].value)
       if (((Node *)(map->entries[i].value))->state == state)
         printProcess((Node *)map->entries[i].value);
-}
-
-void showHashMap(HashMap *map, TypeEntry type) {
-  for (int i = 0; i < map->capacity; i++)
-    printProcess((Node *)map->entries[i].value);
 }

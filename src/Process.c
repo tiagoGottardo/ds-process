@@ -1,7 +1,6 @@
 #include "../include/Process.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 void Clear(System *sys, char **params) { system("clear"); }
 
@@ -21,7 +20,7 @@ HashMap *InitializeFunctions() {
   };
 
   for (int i = 0; i < 10; i++)
-    setHashMap(fnMap, listFunctions[i].name, listFunctions[i].fn);
+    setHashMap(fnMap, listFunctions[i].name, listFunctions[i].fn, true, true);
 
   return fnMap;
 };
@@ -29,9 +28,9 @@ HashMap *InitializeFunctions() {
 System *InitializeSystem() {
   System *sys = (System *)calloc(1, sizeof(System));
 
-  sys->map1 = newHashMap();
-  sys->map2 = newHashMap();
-  sys->map3 = newHashMap();
+  sys->quadraticFnv = newHashMap();
+  sys->linearFnv = newHashMap();
+  sys->linearDjb2 = newHashMap();
   sys->functions = InitializeFunctions();
 
   // it could not be hardcoded
@@ -78,9 +77,9 @@ void AddProcess(System *sys, char **params) {
   Node *node = newNode(pid, name, state, priority);
 
   sys->avl = insertAVL(sys->avl, pid, node);
-  setHashMap(sys->map1, node->name, node);
-  setHashMap(sys->map2, node->name, node);
-  setHashMap(sys->map3, node->name, node);
+  setHashMap(sys->quadraticFnv, node->name, node, true, false);
+  setHashMap(sys->linearFnv, node->name, node, true, true);
+  setHashMap(sys->linearDjb2, node->name, node, false, true);
   insertMaxHeap(sys->heap, node);
 }
 
@@ -108,9 +107,9 @@ void RemoveProcess(System *sys, char **params) {
 
   Node *node = searchAVL(sys->avl, pid);
   if (node) {
-    deleteHashMap(sys->map1, node->name);
-    deleteHashMap(sys->map2, node->name);
-    deleteHashMap(sys->map3, node->name);
+    deleteHashMap(sys->quadraticFnv, node->name, true, false);
+    deleteHashMap(sys->linearFnv, node->name, true, true);
+    deleteHashMap(sys->linearDjb2, node->name, false, true);
     deleteByPriorityMaxHeap(sys->heap, node->priority);
     sys->avl = deleteAVL(sys->avl, node->pid);
   } else {
@@ -140,9 +139,9 @@ void ChangePriority(System *sys, char **params) {
 void RemoveProcessOfMaxPriority(System *sys, char **params) {
   Node *node = searchAVL(sys->avl, sys->heap->vector[0]->pid);
   if (node) {
-    deleteHashMap(sys->map1, node->name);
-    deleteHashMap(sys->map2, node->name);
-    deleteHashMap(sys->map3, node->name);
+    deleteHashMap(sys->quadraticFnv, node->name, true, false);
+    deleteHashMap(sys->linearFnv, node->name, true, true);
+    deleteHashMap(sys->linearDjb2, node->name, false, true);
     deleteByPriorityMaxHeap(sys->heap, 0);
     sys->avl = deleteAVL(sys->avl, node->pid);
   } else {
@@ -188,13 +187,13 @@ void ListProcessByState(System *sys, char **params) {
   if (state == UNKNOWN)
     return;
 
-  if (!sys->map1->length) {
+  if (!sys->quadraticFnv->length) {
     printf("Nothing here yet!\n");
     return;
   }
   printf("----------------------------------------------- Process List "
          "-----------------------------------------------\n");
-  showHashMapByState(sys->map1, state);
+  showHashMapByState(sys->quadraticFnv, state);
   printf("----------------------------------------------------------------"
          "-------------"
          "---------------------"
@@ -202,13 +201,13 @@ void ListProcessByState(System *sys, char **params) {
 }
 
 void FinalizeSystem(System *sys, char **params) {
-  deallocHashMap(sys->map1);
-  deallocHashMap(sys->map2);
-  deallocHashMap(sys->map3);
+  deallocHashMap(sys->quadraticFnv);
+  deallocHashMap(sys->linearFnv);
+  deallocHashMap(sys->linearDjb2);
   deallocMaxHeap(sys->heap);
   deallocAllTree(&sys->avl);
   free(params);
-  
+
   printf("Program finalized!\n");
   exit(0);
 }

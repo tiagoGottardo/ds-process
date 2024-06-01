@@ -10,7 +10,7 @@ void Cli(System *sys, char *input) {
   if (!parameters)
     return;
 
-  fn = (Fn *)getHashMap(sys->functions, parameters[0]);
+  fn = (Fn *)getHashMap(sys->functions, parameters[0], true, true);
   if (!fn) {
     printf("That command do not exists!\n");
     return;
@@ -23,7 +23,7 @@ int main() {
   char input[150];
   printf("======================== Init =========================\n");
   char *scripts[] = {
-      "add 1 Chrome 7 READY",
+      "add 1 Chrome 7 REAY",
       "ls",
       "add 1 VisualStudioCode 9 EXECUTING",
       "rm 1",

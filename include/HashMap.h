@@ -1,5 +1,4 @@
 #include "AVLtree.h"
-
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -7,10 +6,6 @@
 
 #define FNV_OFFSET 14695981039346656037UL
 #define FNV_PRIME 1099511628211UL
-
-uint64_t hash_key(const char *key);
-
-typedef enum TypeEntry { PROCESS, FUNCTION } TypeEntry;
 
 typedef struct {
   char *key;
@@ -27,9 +22,10 @@ typedef struct {
 HashMap *newHashMap();
 void showHashMapByState(HashMap *map, State state);
 void deallocHashMap(HashMap *map);
-void *getHashMap(HashMap *map, char *key);
+void *getHashMap(HashMap *map, char *key, bool isFnv, bool isLinear);
 // bool expandHashMap(HashMap *map);
 void printProcess(Node *node);
-bool setHashMap(HashMap *map, char *key, void *value);
+bool setHashMap(HashMap *map, char *key, void *value, bool isFnv,
+                bool isLinear);
 // void diagnosticHashMap(HashMap *map, TypeEntry type);
-void deleteHashMap(HashMap *map, char *key);
+void deleteHashMap(HashMap *map, char *key, bool isFnv, bool isLinear);

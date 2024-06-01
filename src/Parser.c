@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,6 +12,7 @@ char **split(char *s) {
   }
   if (s[0] == '/') {
     printf("Just a comment!\n");
+    return NULL;
   }
 
   int tokensCounter = 0;
@@ -22,7 +24,7 @@ char **split(char *s) {
   }
 
   free(copyS);
-  
+
   char **result = (char **)calloc(tokensCounter, sizeof(char *));
   char *copyS2 = strdup(s);
   result[0] = strtok(copyS2, " ,()\n");

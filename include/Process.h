@@ -1,10 +1,10 @@
-#include "MaxHeap.h"
 #include "AVLtree.h"
+#include "MaxHeap.h"
 
 typedef struct {
-  HashMap *map1;
-  HashMap *map2;
-  HashMap *map3;
+  HashMap *quadraticFnv;
+  HashMap *linearFnv;
+  HashMap *linearDjb2;
   BNode *avl;
   MaxHeap *heap;
 
