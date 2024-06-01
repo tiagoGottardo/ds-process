@@ -41,7 +41,7 @@ BNode *newBNode(int pid, Node *node) {
   return bnode;
 }
 
-BNode *rightRotate(BNode *y) {
+Node *rightRotate(BNode *y) {
   BNode *x = y->left;
   BNode *T2 = x->right;
 
@@ -82,7 +82,7 @@ BNode *insertAVL(BNode *bnode, int key, Node *node) {
   else if (key > bnode->key)
     bnode->right = insertAVL(bnode->right, key, node);
   else {
-    printf("That key already exists!\n");
+    printf("A process with that pid already exists!\n");
     return bnode;
   }
 
@@ -167,8 +167,9 @@ BNode *deleteAVL(BNode *root, int key) {
     } else {
       BNode *temp = minValueNode(root->right);
 
-      root->node = temp->node;
-      root->key = temp->key;
+      deallocNode(&root->node);
+      temp->left = root->left;
+      root = temp;
 
       root->right = deleteAVL(root->right, temp->key);
     }

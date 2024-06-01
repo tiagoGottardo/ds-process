@@ -18,7 +18,7 @@ MaxHeap *newMaxHeap() {
 void insertHelper(MaxHeap *heap, int index) {
   int parent = (index - 1) / 2;
 
-  if (heap->vector[parent] < heap->vector[index]) {
+  if (heap->vector[parent]->priority < heap->vector[index]->priority) {
     Node *temp = heap->vector[parent];
     heap->vector[parent] = heap->vector[index];
     heap->vector[index] = temp;
@@ -60,22 +60,25 @@ Node *deleteByPriorityMaxHeap(MaxHeap *heap, int from) {
     return NULL;
   }
 
-  for (int i = 0; i < heap->index; i++)
-    if (heap->vector[i]->priority == from)
+  int i;
+  for (i = 0; i < heap->index; i++)
+    if (heap->vector[i]->priority == from) {
       deleteItem = heap->vector[i];
+      break;
+    }
 
-  heap->vector[0] = heap->vector[heap->index - 1];
+  heap->vector[i] = heap->vector[heap->index - 1];
   heap->index--;
 
   maxHeapify(heap, 0);
   return deleteItem;
 }
 
-Node *deleteMax(MaxHeap *heap) {
+Node *deleteMaxHeap(MaxHeap *heap) {
   Node *deleteItem;
 
   if (!heap->index) {
-    printf("\nHeap id empty.");
+    printf("Heap id empty.\n");
     return NULL;
   }
 
@@ -89,49 +92,19 @@ Node *deleteMax(MaxHeap *heap) {
 }
 
 void insertMaxHeap(MaxHeap *heap, Node *new) {
-  if (heap && heap->vector) {
+  if (heap) {
     if (heap->index < heap->capacity) {
       heap->vector[heap->index] = new;
-      insertHelper(heap, heap->index);
-      heap->index++;
+      insertHelper(heap, heap->index++);
     } else {
     }
-  }
-}
-
-void changePriority(MaxHeap *heap, int from, int to) {
-  if (heap && heap->vector) {
-    if (!heap->index) {
-      printf("Heap is empty!\n");
-      return;
-    }
-    int i = 0;
-    for (i = 0; i < heap->index; i++) {
-      if (from == heap->vector[i]->priority)
-        break;
-    }
-
-    int root = heap->vector[0]->priority;
-    heap->vector[i]->priority = to;
-    maxHeapify(heap, i);
   }
 }
 
 void printMaxHeap(MaxHeap *heap) {
-  if (heap && heap->vector) {
-    if (!heap->index) {
-      printf("Heap is empty!\n");
-    } else {
-      printf("Heap: \n");
-      for (int i = 0; i < heap->index; i++) {
-        printf("[%d] | PID: %d\t | name: %-25s\t | state: %s\t | priority: "
-               "%d\n",
-               i, heap->vector[i]->pid, heap->vector[i]->name,
-               displayState(heap->vector[i]->state), heap->vector[i]->priority);
-      }
-      printf("\n");
-    }
-  }
+  if (heap && heap->vector)
+    for (int i = 0; i < heap->index; i++)
+      printProcess(heap->vector[i]);
 }
 
 void deallocMaxHeap(MaxHeap *heap) {

@@ -11,7 +11,6 @@ char **split(char *s) {
   }
   if (s[0] == '/') {
     printf("Just a comment!\n");
-    return NULL;
   }
 
   int tokensCounter = 0;
