@@ -55,5 +55,5 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-build/*
+log/*
 build/dsprocess

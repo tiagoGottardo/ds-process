@@ -1,4 +1,5 @@
 #include "../include/AVLtree.h"
+#include "../include/Log.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +16,10 @@ State evalState(char *s) {
   }
 
   return UNKNOWN;
+}
+
+void AVLlog(const char * text){
+
 }
 
 int height(struct BNode *N) {
