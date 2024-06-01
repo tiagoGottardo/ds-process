@@ -4,10 +4,7 @@
 #include <string.h>
 
 DicioState diciostate[] = {
-    {"BLOCKED", BLOCKED},
-    {"UNBLOCKED", UNBLOCKED},
-    {"EXECUTING", EXECUTING}
-};
+    {"BLOCKED", BLOCKED}, {"READY", READY}, {"EXECUTING", EXECUTING}};
 
 State evalState(char *s) {
 
@@ -16,8 +13,8 @@ State evalState(char *s) {
       return diciostate[i].val;
     }
   }
-  
-  return BLOCKED;
+
+  return UNKNOWN;
 }
 
 int height(struct BNode *N) {
@@ -34,7 +31,8 @@ Node *newNode(int pid, char *name, State state, int priority) {
     printf("Error on alloc memory of node!");
     return NULL;
   }
-  node->name = (char *)calloc(strlen(name)+1, sizeof(char));// Adiciona 1 para o caractere nulo
+  node->name = (char *)calloc(strlen(name) + 1,
+                              sizeof(char)); // Adiciona 1 para o caractere nulo
 
   strcpy(node->name, name);
   node->pid = pid;
@@ -127,12 +125,12 @@ BNode *insertAVL(BNode *bnode, int key, Node *node) {
 }
 
 char *displayState(State state) {
-  for (int i = 0; i<(sizeof(diciostate)/sizeof(diciostate[0])); i++) {
+  for (int i = 0; i < (sizeof(diciostate) / sizeof(diciostate[0])); i++) {
     if (diciostate[i].val == state) {
       return diciostate[i].name;
     }
   }
-  
+
   return "BLOCKED";
 }
 

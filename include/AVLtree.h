@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef enum State { BLOCKED, UNBLOCKED, EXECUTING,UNKNOWN } State;
+typedef enum State { BLOCKED, READY, EXECUTING, UNKNOWN } State;
 
 typedef struct {
   char *name;
