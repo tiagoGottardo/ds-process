@@ -1,4 +1,4 @@
-#include "Process.h"
+#include "../include/Process.h"
 #include <stdlib.h>
 
 void Clear() { system("clear"); }
@@ -44,17 +44,6 @@ int evalInt(char *s) {
     printf("%s is not a number\n", s);
 
   return result;
-}
-
-// not finished
-State evalState(char *s) {
-  char *states[3] = {"EXECUTING", "BLOCKED", "UNBLOCKED"};
-  for (int i = 0; i < 3; i++) {
-    if (!strcmp(states[i], s)) {
-      return EXECUTING;
-    }
-  }
-  return BLOCKED;
 }
 
 bool checkParams(char **params, int num) {

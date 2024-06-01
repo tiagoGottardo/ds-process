@@ -1,7 +1,24 @@
-#include "AVLtree.h"
+#include "../include/AVLtree.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+DicioState diciostate[] = {
+    {"BLOCKED", BLOCKED},
+    {"UNBLOCKED", UNBLOCKED},
+    {"EXECUTING", EXECUTING}
+};
+
+State evalState(char *s) {
+
+  for (int i = 0; diciostate[i].name != NULL; i++) {
+    if (strcmp(diciostate[i].name, s) == 0) {
+      return diciostate[i].val;
+    }
+  }
+  
+  return BLOCKED;
+}
 
 int height(struct BNode *N) {
   if (N == NULL)
@@ -110,14 +127,13 @@ BNode *insertAVL(BNode *bnode, int key, Node *node) {
 }
 
 char *displayState(State state) {
-  switch (state) {
-  case BLOCKED:
-    return "BLOCKED";
-  case UNBLOCKED:
-    return "UBLOCKED";
-  case EXECUTING:
-    return "EXECUTING";
+  for (int i = 0; i<(sizeof(diciostate)/sizeof(diciostate[0])); i++) {
+    if (diciostate[i].val == state) {
+      return diciostate[i].name;
+    }
   }
+  
+  return "BLOCKED";
 }
 
 BNode *minValueNode(BNode *node) {
