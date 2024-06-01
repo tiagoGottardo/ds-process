@@ -1,6 +1,8 @@
 #include "../include/Parser.h"
 #include "../include/Process.h"
+#include "../include/Log.h"
 #include <stdio.h>
+
 
 void Cli(System *sys, char *input) {
   Fn *fn;
@@ -19,8 +21,10 @@ void Cli(System *sys, char *input) {
 }
 
 int main() {
+  initLog();
   System *sys = InitializeSystem();
   char input[150];
+  
   printf("======================== Init =========================\n");
   char *scripts[] = {
       "add 1 Chrome 7 READY",
