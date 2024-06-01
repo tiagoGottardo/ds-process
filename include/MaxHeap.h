@@ -8,7 +8,6 @@ typedef struct {
 
 MaxHeap *newMaxHeap();
 void insertMaxHeap(MaxHeap *heap, Node *newNode);
-Node *deleteMaxHeap(MaxHeap *heap);
-Node *deleteByPriorityMaxHeap(MaxHeap *heap, int from);
+Node *deleteMaxHeap(MaxHeap *heap, int priority);
 void printMaxHeap(MaxHeap *heap);
 void deallocMaxHeap(MaxHeap *heap);

@@ -52,7 +52,7 @@ void maxHeapify(MaxHeap *heap, int index) {
   }
 }
 
-Node *deleteByPriorityMaxHeap(MaxHeap *heap, int from) {
+Node *deleteMaxHeap(MaxHeap *heap, int priority) {
   Node *deleteItem;
 
   if (!heap->index) {
@@ -62,29 +62,12 @@ Node *deleteByPriorityMaxHeap(MaxHeap *heap, int from) {
 
   int i;
   for (i = 0; i < heap->index; i++)
-    if (heap->vector[i]->priority == from) {
+    if (heap->vector[i]->priority == priority) {
       deleteItem = heap->vector[i];
       break;
     }
 
   heap->vector[i] = heap->vector[heap->index - 1];
-  heap->index--;
-
-  maxHeapify(heap, 0);
-  return deleteItem;
-}
-
-Node *deleteMaxHeap(MaxHeap *heap) {
-  Node *deleteItem;
-
-  if (!heap->index) {
-    printf("Heap id empty.\n");
-    return NULL;
-  }
-
-  deleteItem = heap->vector[0];
-
-  heap->vector[0] = heap->vector[heap->index - 1];
   heap->index--;
 
   maxHeapify(heap, 0);
