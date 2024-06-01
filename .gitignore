@@ -9,6 +9,8 @@
 
 app.out
 app
+/build/**
+dsprocess
 
 # Linker output
 *.ilk

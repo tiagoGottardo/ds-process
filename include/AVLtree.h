@@ -31,18 +31,18 @@ State evalState(char *s);
 int height(BNode *N);
 int max(int a, int b);
 Node *newNode(int pid, char *name, State state, int priority);
-BNode *newBNode(int pid, Node *node);
-BNode *rightRotate(BNode *y);
-BNode *leftRotate(BNode *x);
-int getBalance(BNode *N);
+// BNode *newBNode(int pid, Node *node);
+// BNode *rightRotate(BNode *y);
+// BNode *leftRotate(BNode *x);
+// int getBalance(BNode *N);
 BNode *insertAVL(BNode *bnode, int key, Node *node);
 char *displayState(State state);
-BNode *minValueNode(BNode *node);
-void deallocBNode(BNode **bnode);
+// BNode *minValueNode(BNode *node);
+// void deallocBNode(BNode **bnode);
 BNode *deleteAVL(BNode *root, int key);
 Node *searchAVL(BNode *root, int pid);
 void deallocAllTree(BNode **node);
-void printNode(Node *node);
+// void printNode(Node *node);
 void preOrder(BNode *root, void(fn)(Node *node));
 
 #endif

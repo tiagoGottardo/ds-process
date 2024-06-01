@@ -1,6 +1,4 @@
-#include "../include/HashMap.h"
-#include <string.h>
-
+#include "../include/../include/HashMap.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -80,6 +78,21 @@ char *setEntryHashMap(Entry *entries, char *key, void *value, int capacity,
   return key;
 }
 
+void deleteHashMap(HashMap *map, char *key) {
+  uint64_t hash = hash_key(key);
+  size_t index = (size_t)(hash & (uint64_t)(map->capacity - 1));
+
+  while (map->entries[index].key) {
+    if (strcmp(key, map->entries[index].key) == 0) {
+      map->entries[index].value = map->entries[index].key = NULL;
+      map->length--;
+      return;
+    }
+
+    index = (index + 1) % map->capacity;
+  }
+}
+
 bool expandHashMap(HashMap *map) {
   int new_capacity = map->capacity * 2;
   if (new_capacity < map->capacity)
@@ -92,9 +105,8 @@ bool expandHashMap(HashMap *map) {
   for (int i = 0; i < map->capacity; i++) {
     Entry entry = map->entries[i];
 
-    if (entry.key) {
+    if (entry.key)
       setEntryHashMap(new_entries, entry.key, entry.value, new_capacity, NULL);
-    }
   }
 
   free(map->entries);
@@ -118,45 +130,23 @@ bool setHashMap(HashMap *map, char *key, void *value) {
 }
 
 void printProcess(Node *node) {
-  if (node) {
-    printf("PID: %d\t | name: %-25s \t | state: %s\t | "
-           "priority: %d\n",
+  if (node)
+    printf(" PID: %8d\t | name: %-25s | state: %-20s\t | "
+           "priority: %5d\n",
            node->pid, node->name, displayState(node->state), node->priority);
-  }
 }
 
 void showHashMapByState(HashMap *map, State state) {
   if (!map || !map->entries)
     return;
-  for (int i = 0; i < map->capacity; i++) {
-    if (((Node *)map->entries[i].value))
-      if (((Node *)map->entries[i].value)->state == state)
+
+  for (int i = 0; i < map->capacity; i++)
+    if ((Node *)map->entries[i].value)
+      if (((Node *)(map->entries[i].value))->state == state)
         printProcess((Node *)map->entries[i].value);
-  }
 }
 
 void showHashMap(HashMap *map, TypeEntry type) {
-  switch (type) {
-  case PROCESS:
-    for (int i = 0; i < map->capacity; i++) {
-      printProcess((Node *)map->entries[i].value);
-    }
-    break;
-  case FUNCTION:
-    // for (int i = 0; i < map->capacity; i++) {
-    //     printNode((Node *)map->entries[i].value);
-    // }
-    break;
-  }
-}
-
-void diagnosticHashMap(HashMap *map, TypeEntry type) {
-  if (!map)
-    return;
-
-  printf("Map address: %p\n", map);
-  printf("Map size: %d\n", map->length);
-  printf("Map capacity: %d\n", map->capacity);
-
-  showHashMap(map, type);
+  for (int i = 0; i < map->capacity; i++)
+    printProcess((Node *)map->entries[i].value);
 }
