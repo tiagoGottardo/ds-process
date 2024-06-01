@@ -2,85 +2,99 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void swap(Node *v1, Node *v2) {
-  Node *aux = v1;
-  v1 = v2;
-  v2 = aux;
-}
-
-void heapify(MaxHeap *heap, int i) {
-  int highest = i;
-  int leftChild = 2 * i;
-  int rightChild = 2 * i + 1;
-
-  if (leftChild <= heap->index && rightChild <= heap->index) {
-    if (heap->vector[leftChild]->priority > heap->vector[highest]->priority &&
-        heap->vector[leftChild]->priority >
-            heap->vector[rightChild]->priority) {
-      highest = leftChild;
-    } else if (heap->vector[rightChild]->priority >
-                   heap->vector[highest]->priority &&
-               heap->vector[rightChild]->priority >
-                   heap->vector[leftChild]->priority) {
-      highest = rightChild;
-    }
-  } else if (leftChild <= heap->index && heap->vector[leftChild]->priority >
-                                             heap->vector[highest]->priority) {
-    highest = leftChild;
-  } else if (rightChild <= heap->index && heap->vector[rightChild]->priority >
-                                              heap->vector[highest]->priority) {
-    highest = rightChild;
-  }
-  if (highest != i) {
-    swap(heap->vector[i], heap->vector[highest]);
-    heapify(heap, highest);
-  }
-}
-
 MaxHeap *newMaxHeap() {
   int capacity = 16;
-  MaxHeap *heap = (MaxHeap *)malloc(sizeof(MaxHeap));
-  heap->vector = (Node **)malloc(capacity * sizeof(Node *));
-  for (int i = 0; i < capacity; i++) {
+  MaxHeap *heap = (MaxHeap *)calloc(1, sizeof(MaxHeap));
+  heap->vector = (Node **)calloc(capacity, sizeof(Node *));
+
+  for (int i = 0; i < capacity; i++)
     heap->vector[i] = (Node *)calloc(1, sizeof(Node));
-  }
+
   heap->index = 0;
   heap->capacity = capacity;
   return heap;
 }
 
+void insertHelper(MaxHeap *heap, int index) {
+  int parent = (index - 1) / 2;
+
+  if (heap->vector[parent] < heap->vector[index]) {
+    Node *temp = heap->vector[parent];
+    heap->vector[parent] = heap->vector[index];
+    heap->vector[index] = temp;
+
+    insertHelper(heap, parent);
+  }
+}
+
+void maxHeapify(MaxHeap *heap, int index) {
+  int left = index * 2 + 1;
+  int right = index * 2 + 2;
+  int max = index;
+
+  if (left >= heap->index || left < 0)
+    left = -1;
+  if (right >= heap->index || right < 0)
+    right = -1;
+
+  if (left != -1 && heap->vector[left]->priority > heap->vector[max]->priority)
+    max = left;
+  if (right != -1 &&
+      heap->vector[right]->priority > heap->vector[max]->priority)
+    max = right;
+
+  if (max != index) {
+    Node *temp = heap->vector[max];
+    heap->vector[max] = heap->vector[index];
+    heap->vector[index] = temp;
+
+    maxHeapify(heap, max);
+  }
+}
+
+Node *deleteByPriorityMaxHeap(MaxHeap *heap, int from) {
+  Node *deleteItem;
+
+  if (!heap->index) {
+    printf("Heap id empty.\n");
+    return NULL;
+  }
+
+  for (int i = 0; i < heap->index; i++)
+    if (heap->vector[i]->priority == from)
+      deleteItem = heap->vector[i];
+
+  heap->vector[0] = heap->vector[heap->index - 1];
+  heap->index--;
+
+  maxHeapify(heap, 0);
+  return deleteItem;
+}
+
+Node *deleteMax(MaxHeap *heap) {
+  Node *deleteItem;
+
+  if (!heap->index) {
+    printf("\nHeap id empty.");
+    return NULL;
+  }
+
+  deleteItem = heap->vector[0];
+
+  heap->vector[0] = heap->vector[heap->index - 1];
+  heap->index--;
+
+  maxHeapify(heap, 0);
+  return deleteItem;
+}
+
 void insertMaxHeap(MaxHeap *heap, Node *new) {
   if (heap && heap->vector) {
-
-    if (!heap->index) {
-      heap->vector[0] = (Node *)malloc(sizeof(Node));
-
-      heap->vector[0] = new;
+    if (heap->index < heap->capacity) {
+      heap->vector[heap->index] = new;
+      insertHelper(heap, heap->index);
       heap->index++;
-      return;
-    }
-
-    if (heap->index == heap->capacity) {
-      Node *vet = realloc(heap->vector, heap->capacity * 2);
-
-      if (vet) {
-        heap->vector[0] = vet;
-      } else {
-        printf("Heap is full! It could not possible insert anymore.\n");
-        return;
-      }
-    }
-
-    heap->index++;
-    int i = heap->index;
-    heap->vector[i] = new;
-    int parent = i / 2;
-
-    while (i > 1 &&
-           heap->vector[i]->priority > heap->vector[parent]->priority) {
-      swap(heap->vector[i], heap->vector[parent]);
-      i = parent;
-      parent = i / 2;
+    } else {
     }
   }
 }
@@ -99,43 +113,8 @@ void changePriority(MaxHeap *heap, int from, int to) {
 
     int root = heap->vector[0]->priority;
     heap->vector[i]->priority = to;
-    heapify(heap, i);
+    maxHeapify(heap, i);
   }
-}
-
-void deleteByPriorityMaxHeap(MaxHeap *heap, int priority) {
-  if (heap && heap->vector) {
-    if (!heap->index) {
-      printf("Heap is empty!\n");
-      return;
-    }
-    int i = 0;
-    for (i = 0; i < heap->index; i++) {
-      if (priority == heap->vector[i]->priority)
-        break;
-    }
-
-    int root = heap->vector[0]->priority;
-    heap->vector[i] = heap->vector[heap->index - 1];
-    heap->index--;
-    heapify(heap, i);
-  }
-}
-
-int deleteMaxHeap(MaxHeap *heap) {
-  if (heap && heap->vector) {
-    if (!heap->index) {
-      printf("Heap is empty!\n");
-      return -1;
-    }
-
-    int root = heap->vector[0]->priority;
-    heap->vector[0] = heap->vector[heap->index - 1];
-    heap->index--;
-    heapify(heap, 1);
-    return root;
-  }
-  return -1;
 }
 
 void printMaxHeap(MaxHeap *heap) {
@@ -145,10 +124,10 @@ void printMaxHeap(MaxHeap *heap) {
     } else {
       printf("Heap: \n");
       for (int i = 0; i < heap->index; i++) {
-        printf(
-            "[%d] | PID: %d\t | name: %-25s\t | state: %s\t | priority: %d\n",
-            i, heap->vector[i]->pid, heap->vector[i]->name,
-            displayState(heap->vector[i]->state), heap->vector[i]->priority);
+        printf("[%d] | PID: %d\t | name: %-25s\t | state: %s\t | priority: "
+               "%d\n",
+               i, heap->vector[i]->pid, heap->vector[i]->name,
+               displayState(heap->vector[i]->state), heap->vector[i]->priority);
       }
       printf("\n");
     }
