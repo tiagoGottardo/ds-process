@@ -144,7 +144,15 @@ void ChangePriority(System *sys, char **params) {
 }
 
 void RemoveProcessOfMaxPriority(System *sys, char **params) {
-  deleteMaxHeap(sys->heap);
+  Node *node = searchAVL(sys->avl, sys->heap->vector->pid);
+  printf("%d\n", sys->heap->vector->pid);
+  if (node) {
+    setHashMap(sys->map1, node->name, NULL);
+    setHashMap(sys->map2, node->name, NULL);
+    setHashMap(sys->map3, node->name, NULL);
+    deleteByPriorityMaxHeap(sys->heap, node->priority);
+    sys->avl = deleteAVL(sys->avl, node->pid);
+  }
   printf("RemoveProcessOfMaxPriority called!\n");
 }
 
