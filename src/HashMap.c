@@ -1,4 +1,5 @@
-#include "../include/../include/HashMap.h"
+#include "../include/HashMap.h"
+#include "../include/Log.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,6 +29,7 @@ HashMap *newHashMap() {
   if (!map)
     return NULL;
 
+  map->colisionTracker = 0;
   map->length = 0;
   map->capacity = INITIAL_CAPACITY;
 
@@ -73,7 +75,7 @@ void *getHashMap(HashMap *map, char *key, bool isFnv, bool isLinear) {
   return NULL;
 }
 
-char *setEntryHashMap(Entry *entries, char *key, void *value, int capacity,
+int setEntryHashMap(Entry *entries, char *key, void *value, int capacity,
                       int *plength, bool isFnv, bool isLinear) {
   uint64_t hash;
   if (isFnv)
@@ -86,7 +88,7 @@ char *setEntryHashMap(Entry *entries, char *key, void *value, int capacity,
   while (entries[index].key != NULL) {
     if (strcmp(key, entries[index].key) == 0) {
       entries[index].value = value;
-      return entries[index].key;
+      return i;
     }
 
     if (isLinear)
@@ -100,14 +102,14 @@ char *setEntryHashMap(Entry *entries, char *key, void *value, int capacity,
   if (plength) {
     key = strdup(key);
     if (!key)
-      return NULL;
+      return 0;
 
     (*plength)++;
   }
 
   entries[index].key = (char *)key;
   entries[index].value = value;
-  return key;
+  return i;
 }
 
 void deleteHashMap(HashMap *map, char *key, bool isFnv, bool isLinear) {
@@ -168,8 +170,18 @@ bool setHashMap(HashMap *map, char *key, void *value, bool isFnv,
     if (!expandHashMap(map, isFnv, isLinear))
       return false;
 
-  setEntryHashMap(map->entries, key, value, map->capacity, &map->length, isFnv,
+  int colisoes = setEntryHashMap(map->entries, key, value, map->capacity, &map->length, isFnv,
                   isLinear);
+
+
+  map->colisionTracker+=colisoes;
+  if(!isFnv&&colisoes){
+    logMessage("log/hash3.txt", "Entrada adicionada causou uma colisão resolvida em %d saltos\nO traking total é de %d", colisoes, map->colisionTracker);
+  }else if(isFnv&&isLinear&&colisoes){
+    logMessage("log/hash2.txt", "Entrada adicionada causou uma colisão resolvida em %d saltos\nO traking total é de %d", colisoes, map->colisionTracker);
+  }else if(colisoes){
+    logMessage("log/hash1.txt", "Entrada adicionada causou uma colisão resolvida em %d saltos\nO traking total é de %d", colisoes, map->colisionTracker);
+  }
   return true;
 }
 

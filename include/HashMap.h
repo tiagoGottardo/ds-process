@@ -17,6 +17,7 @@ typedef struct {
 
   int capacity;
   int length;
+  int colisionTracker;
 } HashMap;
 
 HashMap *newHashMap();

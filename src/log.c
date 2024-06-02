@@ -40,7 +40,7 @@ void logMessage(const char *fileName, const char *format, ...) {
 }
 
 void logErro(char* functionName,char * errorBody){
-  logMessage("[ERRO] A função [%s] retornou erro: \n[ERRO]:{%s}", functionName, errorBody);
+  logMessage("log/log.txt","[ERRO] A função [%s] retornou erro: \n[ERRO]:{%s}", functionName, errorBody);
 }
 
 void logParserFunctions(char * functionName){
@@ -59,7 +59,10 @@ void initLogFile(const char * fileName){
 }
 
 void initLog(){
+    initLogFile("log/log.txt");
     initLogFile("log/AVL.txt");
-    initLogFile("log/hash.txt");
+    initLogFile("log/hash1.txt");
+    initLogFile("log/hash2.txt");
+    initLogFile("log/hash3.txt");
     initLogFile("log/heap.txt");
 }
