@@ -5,6 +5,9 @@
 #include <string.h>
 
 char **split(char *s) {
+  if(s[0] == '\n'){
+    return NULL;
+  };
   if (!s) {
     printf("Empty input!\n");
     return NULL;
@@ -40,11 +43,25 @@ bool ReadFile(System *sys, char *filename) {
     return false;
 
   char line[150];
+  char**parameters;
   Fn *fn;
-  while (fgets(line, sizeof(line), file) != NULL) {
-    char **parameters = split(line);
+  while (fgets(line, sizeof(line), file)) {
+    printf("%s", line);
+    if(line[0] == '\n') continue;
+    parameters = split(line);
+
     if (!parameters)
       continue;
+
+    if(sys == NULL){
+      if(!strcmp(parameters[0], "Iniciar")){
+        sys = InitializeSystem();
+        printf("System initialize\n");
+      } else {
+      printf("You need to initiate system before do anything!\n");
+      }
+      continue;
+    }
 
     fn = (Fn *)getHashMap(sys->functions, parameters[0], true, true);
     if (!fn) {

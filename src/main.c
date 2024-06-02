@@ -23,11 +23,11 @@ int main() {
     while (1) {
       printf("What's file name? ");
       scanf(" %[^\n]", input);
-      if (!ReadFile(sys, input)) {
-        printf("That file not exists!\n");
-        continue;
+      if (ReadFile(sys, input)) break;
+      
+      printf("That file not exists!\n");
+      continue;
       }
-    }
   } else {
     while (1) {
       printf("dsprocess> ");
