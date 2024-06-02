@@ -6,20 +6,16 @@ void Clear(System *sys, char **params) { system("clear"); }
 
 HashMap *InitializeFunctions() {
   HashMap *fnMap = newHashMap();
-  Function listFunctions[10] = {
-      {"add", AddProcess},
-      {"ls", ListAVLProcess},
-      {"rm", RemoveProcess},
-      {"cgp", ChangePriority},
-      {"rmp", RemoveProcessOfMaxPriority},
-      {"ltp", ListProcessByPriority},
-      {"cgs", ChangeState},
-      {"lss", ListProcessByState},
-      {"q", FinalizeSystem},
-      {"clear", Clear},
+  Function listFunctions[12] = {
+      {"InserirAVL", AddProcess},          {"ListarAVL", ListAVLProcess},
+      {"TerminarAVL", RemoveProcess},      {"Terminar", RemoveProcess},
+      {"AlterarHeap", ChangePriority},     {"BloquearHash", BlockProcess},
+      {"DesbloquearHash", UnblockProcess}, {"RemoverHash", RemoveProcess},
+      {"ListarHash", ListProcessByState},  {"Executar", ExecuteProcess},
+      {"Encerrar", FinalizeSystem},        {"clear", Clear},
   };
 
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < 12; i++)
     setHashMap(fnMap, listFunctions[i].name, listFunctions[i].fn, true, true);
 
   return fnMap;
@@ -33,7 +29,6 @@ System *InitializeSystem() {
   sys->linearDjb2 = newHashMap();
   sys->functions = InitializeFunctions();
 
-  // it could not be hardcoded
   sys->heap = newMaxHeap();
   return sys;
 }
@@ -61,6 +56,42 @@ bool checkParams(char **params, int num) {
     }
 
   return true;
+}
+
+void BlockProcess(System *sys, char **params) {
+  if (!checkParams(params, 1))
+    return;
+
+  int pid = evalInt(params[1]);
+  if (!pid)
+    return;
+
+  ChangeState(sys, pid, BLOCKED);
+  return;
+}
+
+void ExecuteProcess(System *sys, char **params) {
+  if (!checkParams(params, 1))
+    return;
+
+  int pid = evalInt(params[1]);
+  if (!pid)
+    return;
+
+  ChangeState(sys, pid, EXECUTING);
+  return;
+}
+
+void UnblockProcess(System *sys, char **params) {
+  if (!checkParams(params, 1))
+    return;
+
+  int pid = evalInt(params[1]);
+  if (!pid)
+    return;
+
+  ChangeState(sys, pid, READY);
+  return;
 }
 
 void AddProcess(System *sys, char **params) {
@@ -170,21 +201,13 @@ void ListProcessByPriority(System *sys, char **params) {
   }
 }
 
-void ChangeState(System *sys, char **params) {
-  if (!checkParams(params, 2))
-    return;
-
-  int pid = evalInt(params[1]);
-  int to = evalState(params[2]);
-  if (!pid || !to)
-    return;
-
+void ChangeState(System *sys, int pid, State state) {
   Node *node = searchAVL(sys->avl, pid);
   if (!node) {
     printf("Process not found!\n");
     return;
   }
-  node->state = to;
+  node->state = state;
 }
 
 void ListProcessByState(System *sys, char **params) {
