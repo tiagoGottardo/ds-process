@@ -24,9 +24,7 @@ HashMap *newHashMap();
 void showHashMapByState(HashMap *map, State state);
 void deallocHashMap(HashMap *map);
 void *getHashMap(HashMap *map, char *key, bool isFnv, bool isLinear);
-// bool expandHashMap(HashMap *map);
 void printProcess(Node *node);
 bool setHashMap(HashMap *map, char *key, void *value, bool isFnv,
                 bool isLinear);
-// void diagnosticHashMap(HashMap *map, TypeEntry type);
 void deleteHashMap(HashMap *map, char *key, bool isFnv, bool isLinear);

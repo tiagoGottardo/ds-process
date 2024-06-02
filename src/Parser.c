@@ -1,11 +1,13 @@
+#include "../include/Process.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "../include/Parser.h"
-
 char **split(char *s) {
+  if(s[0] == '\n'){
+    return NULL;
+  };
   if (!s) {
     printf("Empty input!\n");
     return NULL;
@@ -34,31 +36,63 @@ char **split(char *s) {
   return result;
 }
 
-// void readFile() {
-//   FILE *file = fopen("input.txt", "r");
+bool ReadFile(System *sys, char *filename) {
+  FILE *file = fopen(filename, "r");
 
-//   if (file == NULL) {
-//     // logErro();
-//     return;
-//   }
+  if (!file)
+    return false;
 
-//   char line[100];
+  char line[150];
+  char**parameters;
+  Fn *fn;
+  while (fgets(line, sizeof(line), file)) {
+    printf("%s", line);
+    if(line[0] == '\n') continue;
+    parameters = split(line);
 
-//   while (fgets(line, sizeof(line), file) != NULL) {
-//     int numElements;
-//     char **elements;
-//     splitElements(line, &elements, &numElements);
+    if (!parameters)
+      continue;
 
-//     callFunctions(elements, numElements);
+    if(sys == NULL){
+      if(!strcmp(parameters[0], "Iniciar")){
+        sys = InitializeSystem();
+        printf("System initialize\n");
+      } else {
+      printf("You need to initiate system before do anything!\n");
+      }
+      continue;
+    }
 
-//     for (int i = 0; i < numElements; i++) {
-//       free(elements[i]);
-//     }
-//     free(elements);
-//   }
+    fn = (Fn *)getHashMap(sys->functions, parameters[0], true, true);
+    if (!fn) {
+      printf("That command do not exists!\n");
+      continue;
+    }
+    (*fn)(sys, parameters);
+  }
 
-//   fclose(file);
-//   file = NULL;
+  fclose(file);
+  file = NULL;
 
-//   return;
-// }
+  return true;
+}
+
+void Cli(System *sys) {
+  Fn *fn;
+  char input[150];
+  while (1) {
+    printf("ds-process> ");
+    scanf(" %[^\n]", input);
+
+    char **parameters = split(input);
+    if (!parameters)
+      continue;
+
+    fn = (Fn *)getHashMap(sys->functions, parameters[0], true, true);
+    if (!fn) {
+      printf("That command do not exists!\n");
+      continue;
+    }
+    (*fn)(sys, parameters);
+  }
+}

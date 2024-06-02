@@ -5,27 +5,23 @@
 #include <string.h>
 
 DicioState diciostate[] = {
-    {"BLOCKED", BLOCKED}, {"READY", READY}, {"EXECUTING", EXECUTING}};
+    {"BLOQUEADO", BLOCKED}, {"PRONTO", READY}, {"EXECUCAO", EXECUTING}};
 
 State evalState(char *s) {
-
-  for (int i = 0; diciostate[i].name != NULL; i++) {
-    if (strcmp(diciostate[i].name, s) == 0) {
+  for (int i = 0; diciostate[i].name; i++)
+    if (!strcmp(diciostate[i].name, s))
       return diciostate[i].val;
-    }
-  }
 
+  printf("That state do not exists!\n");
   return UNKNOWN;
 }
 
-void AVLlog(const char * text){
+void AVLlog(const char *text) {}
 
-}
-
-int height(struct BNode *N) {
-  if (N == NULL)
+int height(BNode *bnode) {
+  if (!bnode)
     return 0;
-  return N->height;
+  return bnode->height;
 }
 
 int max(int a, int b) { return (a > b) ? a : b; }
@@ -36,8 +32,7 @@ Node *newNode(int pid, char *name, State state, int priority) {
     logMessage("log/AVL.txt", "Error on alloc memory of node!");
     return NULL;
   }
-  node->name = (char *)calloc(strlen(name) + 1,
-                              sizeof(char)); // Adiciona 1 para o caractere nulo
+  node->name = (char *)calloc(strlen(name) + 1, sizeof(char));
 
   strcpy(node->name, name);
   node->pid = pid;

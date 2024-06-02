@@ -9,9 +9,8 @@
 
 app.out
 app
-./build/**
-./build/dsprocess
-
+./dsprocess
+./tests
 # Linker output
 *.ilk
 *.map

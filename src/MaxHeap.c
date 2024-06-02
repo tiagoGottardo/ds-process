@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 MaxHeap *newMaxHeap() {
-  int capacity = 16;
+  int capacity = INITIAL_CAPACITY;
   MaxHeap *heap = (MaxHeap *)calloc(1, sizeof(MaxHeap));
   heap->vector = (Node **)calloc(capacity, sizeof(Node *));
 
@@ -52,7 +52,7 @@ void maxHeapify(MaxHeap *heap, int index) {
   }
 }
 
-Node *deleteMaxHeap(MaxHeap *heap, int priority) {
+Node *deleteMaxHeap(MaxHeap *heap, int pid) {
   Node *deleteItem;
 
   if (!heap->index) {
@@ -62,7 +62,7 @@ Node *deleteMaxHeap(MaxHeap *heap, int priority) {
 
   int i;
   for (i = 0; i < heap->index; i++)
-    if (heap->vector[i]->priority == priority) {
+    if (heap->vector[i]->pid == pid) {
       deleteItem = heap->vector[i];
       break;
     }
@@ -85,22 +85,22 @@ void insertMaxHeap(MaxHeap *heap, Node *new) {
 
       int newCapacity = heap->capacity * 2;
       Node **newVector = (Node **)malloc(newCapacity * sizeof(Node *));
-            
-        if (newVector) {
-          // Copia os elementos existentes para o novo vetor
-          memcpy(newVector, heap->vector, heap->capacity * sizeof(Node *));
-                
-          // Libera o vetor antigo e aponta o heap para o novo vetor
-          free(heap->vector);
-          heap->vector = newVector;
-          heap->capacity = newCapacity;
 
-          // Insere o novo elemento
-          heap->vector[heap->index] = new;
-          insertHelper(heap, heap->index++);
-        }else {
-          printf("ERRO ao dobrar tamanho do heap");
-        }
+      if (newVector) {
+        // Copia os elementos existentes para o novo vetor
+        memcpy(newVector, heap->vector, heap->capacity * sizeof(Node *));
+
+        // Libera o vetor antigo e aponta o heap para o novo vetor
+        free(heap->vector);
+        heap->vector = newVector;
+        heap->capacity = newCapacity;
+
+        // Insere o novo elemento
+        heap->vector[heap->index] = new;
+        insertHelper(heap, heap->index++);
+      } else {
+        printf("ERRO ao dobrar tamanho do heap");
+      }
     }
   }
 }
