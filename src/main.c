@@ -14,9 +14,10 @@ void Cli(System *sys, char *input) {
 
   fn = (Fn *)getHashMap(sys->functions, parameters[0], true, true);
   if (!fn) {
-    printf("That command do not exists!\n");
+    logMessage("log/log.txt", "[ERRO]: O comando %s não existe", input);
     return;
   }
+  logMessage("log/log.txt", "A CLI recebeu o input: %s, e chamou a função", input);
   (*fn)(sys, parameters);
 }
 

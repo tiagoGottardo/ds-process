@@ -33,7 +33,7 @@ int max(int a, int b) { return (a > b) ? a : b; }
 Node *newNode(int pid, char *name, State state, int priority) {
   Node *node = (Node *)calloc(1, sizeof(Node));
   if (!node) {
-    printf("Error on alloc memory of node!");
+    logMessage("log/AVL.txt", "Error on alloc memory of node!");
     return NULL;
   }
   node->name = (char *)calloc(strlen(name) + 1,
@@ -50,7 +50,7 @@ Node *newNode(int pid, char *name, State state, int priority) {
 BNode *newBNode(int pid, Node *node) {
   BNode *bnode = (BNode *)calloc(1, sizeof(BNode));
   if (!bnode) {
-    printf("Error on alloc memory of bnode!\n");
+    logMessage("log/AVL.txt", "Error on alloc memory of bnode!");
     return NULL;
   }
 
@@ -102,7 +102,7 @@ BNode *insertAVL(BNode *bnode, int key, Node *node) {
   else if (key > bnode->key)
     bnode->right = insertAVL(bnode->right, key, node);
   else {
-    printf("A process with that pid already exists!\n");
+    logMessage("log/AVL.txt", "A process with that pid already exists!");
     return bnode;
   }
 
@@ -222,7 +222,8 @@ BNode *deleteAVL(BNode *root, int key) {
 
 Node *searchAVL(BNode *root, int pid) {
   if (!root) {
-    printf("Process not found in AVL Tree!\n");
+    
+    logMessage("log/AVL.txt", "Process not found in AVL Tree!");
     return NULL;
   }
 

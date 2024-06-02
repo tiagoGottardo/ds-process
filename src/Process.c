@@ -1,4 +1,5 @@
 #include "../include/Process.h"
+#include "../include/Log.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -26,10 +27,14 @@ HashMap *InitializeFunctions() {
 };
 
 System *InitializeSystem() {
+  logMessage("log/log.txt", "Iniciando sistema");
   System *sys = (System *)calloc(1, sizeof(System));
 
+  logMessage("log/hash1.txt", "Iniciando hashmap/quadraticFnv");
   sys->quadraticFnv = newHashMap();
+  logMessage("log/hash2.txt", "Iniciando hashmap/linearFnv");
   sys->linearFnv = newHashMap();
+  logMessage("log/hash3.txt", "Iniciando hashmap/linearDjb2");
   sys->linearDjb2 = newHashMap();
   sys->functions = InitializeFunctions();
 
