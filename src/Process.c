@@ -6,16 +6,17 @@ void Clear(System *sys, char **params) { system("clear"); }
 
 HashMap *InitializeFunctions() {
   HashMap *fnMap = newHashMap();
-  Function listFunctions[12] = {
+  Function listFunctions[14] = {
       {"InserirAVL", AddProcess},          {"ListarAVL", ListAVLProcess},
       {"TerminarAVL", RemoveProcess},      {"Terminar", RemoveProcess},
       {"AlterarHeap", ChangePriority},     {"BloquearHash", BlockProcess},
       {"DesbloquearHash", UnblockProcess}, {"RemoverHash", RemoveProcess},
+      {"ListaHeap", ListProcessByPriority}, {"RemoverHeap", RemoveProcessOfMaxPriority},
       {"ListarHash", ListProcessByState},  {"Executar", ExecuteProcess},
       {"Encerrar", FinalizeSystem},        {"clear", Clear},
   };
 
-  for (int i = 0; i < 12; i++)
+  for (int i = 0; i < 14; i++)
     setHashMap(fnMap, listFunctions[i].name, listFunctions[i].fn, true, true);
 
   return fnMap;
