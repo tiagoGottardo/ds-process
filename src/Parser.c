@@ -1,9 +1,8 @@
+#include "../include/Process.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "../include/Parser.h"
 
 char **split(char *s) {
   if (!s) {
@@ -34,31 +33,49 @@ char **split(char *s) {
   return result;
 }
 
-// void readFile() {
-//   FILE *file = fopen("input.txt", "r");
+bool ReadFile(System *sys, char *filename) {
+  FILE *file = fopen(filename, "r");
 
-//   if (file == NULL) {
-//     // logErro();
-//     return;
-//   }
+  if (!file)
+    return false;
 
-//   char line[100];
+  char line[150];
+  Fn *fn;
+  while (fgets(line, sizeof(line), file) != NULL) {
+    char **parameters = split(line);
+    if (!parameters)
+      continue;
 
-//   while (fgets(line, sizeof(line), file) != NULL) {
-//     int numElements;
-//     char **elements;
-//     splitElements(line, &elements, &numElements);
+    fn = (Fn *)getHashMap(sys->functions, parameters[0], true, true);
+    if (!fn) {
+      printf("That command do not exists!\n");
+      continue;
+    }
+    (*fn)(sys, parameters);
+  }
 
-//     callFunctions(elements, numElements);
+  fclose(file);
+  file = NULL;
 
-//     for (int i = 0; i < numElements; i++) {
-//       free(elements[i]);
-//     }
-//     free(elements);
-//   }
+  return true;
+}
 
-//   fclose(file);
-//   file = NULL;
+void Cli(System *sys) {
+  Fn *fn;
+  char input[150];
+  while (1) {
+    printf("ds-process> ");
+    scanf(" %[^\n]", input);
 
-//   return;
-// }
+    char **parameters = split(input);
+    if (!parameters)
+      continue;
+
+    fn = (Fn *)getHashMap(sys->functions, parameters[0], true, true);
+    if (!fn) {
+      printf("That command do not exists!\n");
+      continue;
+    }
+    (*fn)(sys, parameters);
+  }
+}
