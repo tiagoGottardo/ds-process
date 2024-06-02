@@ -5,7 +5,7 @@
 #include <string.h>
 
 DicioState diciostate[] = {
-    {"BLOCKED", BLOCKED}, {"READY", READY}, {"EXECUTING", EXECUTING}};
+    {"BLOQUEADO", BLOCKED}, {"PRONTO", READY}, {"EXECUCAO", EXECUTING}};
 
 State evalState(char *s) {
   for (int i = 0; diciostate[i].name; i++)
@@ -32,8 +32,7 @@ Node *newNode(int pid, char *name, State state, int priority) {
     printf("Error on alloc memory of node!");
     return NULL;
   }
-  node->name = (char *)calloc(strlen(name) + 1,
-                              sizeof(char)); // Adiciona 1 para o caractere nulo
+  node->name = (char *)calloc(strlen(name) + 1, sizeof(char));
 
   strcpy(node->name, name);
   node->pid = pid;
