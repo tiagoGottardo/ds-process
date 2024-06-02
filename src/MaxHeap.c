@@ -107,7 +107,7 @@ void insertMaxHeap(MaxHeap *heap, Node *new) {
 
 void printMaxHeap(MaxHeap *heap) {
   if (heap && heap->vector)
-    for (int i = 0; i < heap->index; i++)
+    for (int i = 0; i < (heap->index); i++)
       printProcess(heap->vector[i]);
 }
 
