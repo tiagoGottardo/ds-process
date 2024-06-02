@@ -123,6 +123,7 @@ void deleteHashMap(HashMap *map, char *key, bool isFnv, bool isLinear) {
   int i = 0, initial = index;
   while (map->entries[index].key) {
     if (strcmp(key, map->entries[index].key) == 0) {
+      free(map->entries[index].key);
       map->entries[index].value = map->entries[index].key = NULL;
       map->length--;
       return;

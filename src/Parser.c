@@ -66,9 +66,13 @@ bool ReadFile(System *sys, char *filename) {
     fn = (Fn *)getHashMap(sys->functions, parameters[0], true, true);
     if (!fn) {
       printf("That command do not exists!\n");
+      free(parameters[0]);
+      free(parameters);
       continue;
     }
     (*fn)(sys, parameters);
+    free(parameters[0]);
+    free(parameters);
   }
 
   fclose(file);

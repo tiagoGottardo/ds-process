@@ -146,6 +146,7 @@ BNode *minValueNode(BNode *bnode) {
   return current;
 }
 void deallocNode(Node **node) {
+  free((*node)->name);
   free(*node);
   *node = NULL;
 }
