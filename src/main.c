@@ -3,22 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 
-void Cli(System *sys, char *input) {
-  Fn *fn;
-  printf("ds-process> %s\n", input);
-  // scanf(" %[^\n]", input);
-  char **parameters = split(input);
-  if (!parameters)
-    return;
-
-  fn = (Fn *)getHashMap(sys->functions, parameters[0], true, true);
-  if (!fn) {
-    logMessage("log/log.txt", "[ERRO]: O comando %s não existe", input);
-    return;
-  }
-  logMessage("log/log.txt", "A CLI recebeu o input: %s, e chamou a função", input);
-  (*fn)(sys, parameters);
-}
 
 int main() {
   initLog();
