@@ -12,7 +12,8 @@ State evalState(char *s) {
     if (!strcmp(diciostate[i].name, s))
       return diciostate[i].val;
 
-  printf("That state do not exists!\n");
+  printf("[ERRO]: Estado não existe\n");
+  logMessage("log/AVL.txt", "[ERRO]: Estado não existe");
   return UNKNOWN;
 }
 
@@ -29,7 +30,7 @@ int max(int a, int b) { return (a > b) ? a : b; }
 Node *newNode(int pid, char *name, State state, int priority) {
   Node *node = (Node *)calloc(1, sizeof(Node));
   if (!node) {
-    logMessage("log/AVL.txt", "Error on alloc memory of node!");
+    logMessage("log/AVL.txt", "[ERRO]: Não doi possivel alocar memória em newNode");
     return NULL;
   }
   node->name = (char *)calloc(strlen(name) + 1, sizeof(char));
@@ -39,13 +40,15 @@ Node *newNode(int pid, char *name, State state, int priority) {
   node->state = state;
   node->priority = priority;
 
+  logMessage("log/AVL.txt", "Processo criado com PID: %d", pid);
+
   return node;
 }
 
 BNode *newBNode(int pid, Node *node) {
   BNode *bnode = (BNode *)calloc(1, sizeof(BNode));
   if (!bnode) {
-    logMessage("log/AVL.txt", "Error on alloc memory of bnode!");
+    logMessage("log/AVL.txt", "[ERRO]: Não doi possível alocar memória em newBNode");
     return NULL;
   }
 
@@ -163,6 +166,7 @@ BNode *deleteAVL(BNode *root, int key) {
     root->right = deleteAVL(root->right, key);
 
   else {
+    logMessage("log/AVL.txt", "Desalocando processo com PID: %d", key);
     if (!root->left || !root->right) {
       BNode *temp = root->left ? root->left : root->right;
 
@@ -218,7 +222,7 @@ BNode *deleteAVL(BNode *root, int key) {
 Node *searchAVL(BNode *root, int pid) {
   if (!root) {
     
-    logMessage("log/AVL.txt", "Process not found in AVL Tree!");
+    logMessage("log/AVL.txt", "O processo com PID: %d não foi encontrado", pid);
     return NULL;
   }
 
@@ -227,11 +231,13 @@ Node *searchAVL(BNode *root, int pid) {
   } else if (pid < root->key) {
     return searchAVL(root->left, pid);
   } else {
+    logMessage("log/AVL.txt", "A busca por PID: %d econtrou processo com sucesso", pid);
     return root->node;
   }
 }
 
 void deallocAllTree(BNode **bnode) {
+  logMessage("log/AVL.txt", "Desalocando arvore");
   if (*bnode) {
     deallocAllTree(&(*bnode)->right);
     deallocAllTree(&(*bnode)->left);

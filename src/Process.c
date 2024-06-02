@@ -12,7 +12,7 @@ HashMap *InitializeFunctions() {
       {"TerminarAVL", RemoveProcess},      {"Terminar", RemoveProcess},
       {"AlterarHeap", ChangePriority},     {"BloquearHash", BlockProcess},
       {"DesbloquearHash", UnblockProcess}, {"RemoverHash", RemoveProcess},
-      {"ListaHeap", ListProcessByPriority}, {"RemoverHeap", RemoveProcessOfMaxPriority},
+      {"ListarHeap", ListProcessByPriority}, {"RemoverHeap", RemoveProcessOfMaxPriority},
       {"ListarHash", ListProcessByState},  {"Executar", ExecuteProcess},
       {"Encerrar", FinalizeSystem},        {"clear", Clear},
   };
@@ -154,7 +154,7 @@ void RemoveProcess(System *sys, char **params) {
     deleteHashMap(sys->quadraticFnv, node->name, true, false);
     deleteHashMap(sys->linearFnv, node->name, true, true);
     deleteHashMap(sys->linearDjb2, node->name, false, true);
-    deleteMaxHeap(sys->heap, node->priority);
+    deleteMaxHeap(sys->heap, node->pid);
     sys->avl = deleteAVL(sys->avl, node->pid);
   } else {
     printf("Process not found!\n");
@@ -172,7 +172,7 @@ void ChangePriority(System *sys, char **params) {
 
   Node *node = searchAVL(sys->avl, pid);
   if (node) {
-    deleteMaxHeap(sys->heap, node->priority);
+    deleteMaxHeap(sys->heap, node->pid);
     node->priority = newPriority;
     insertMaxHeap(sys->heap, node);
   } else {
@@ -186,7 +186,7 @@ void RemoveProcessOfMaxPriority(System *sys, char **params) {
     deleteHashMap(sys->quadraticFnv, node->name, true, false);
     deleteHashMap(sys->linearFnv, node->name, true, true);
     deleteHashMap(sys->linearDjb2, node->name, false, true);
-    deleteMaxHeap(sys->heap, node->priority);
+    deleteMaxHeap(sys->heap, node->pid);
     sys->avl = deleteAVL(sys->avl, node->pid);
   } else {
     printf("Process not found!\n");
