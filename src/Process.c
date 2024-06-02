@@ -74,6 +74,13 @@ void AddProcess(System *sys, char **params) {
   if (!pid || !priority || state == UNKNOWN)
     return;
 
+  Node *search = searchAVL(sys->avl, pid);
+
+  if (search) {
+    printf("A process with that pid already exists!\n");
+    return;
+  }
+
   Node *node = newNode(pid, name, state, priority);
 
   sys->avl = insertAVL(sys->avl, pid, node);
@@ -132,7 +139,7 @@ void ChangePriority(System *sys, char **params) {
     node->priority = newPriority;
     insertMaxHeap(sys->heap, node);
   } else {
-    printf("Process not found!");
+    printf("Process not found!\n");
   }
 }
 
@@ -145,7 +152,7 @@ void RemoveProcessOfMaxPriority(System *sys, char **params) {
     deleteMaxHeap(sys->heap, node->priority);
     sys->avl = deleteAVL(sys->avl, node->pid);
   } else {
-    printf("Process not found!");
+    printf("Process not found!\n");
   }
 }
 
@@ -174,7 +181,7 @@ void ChangeState(System *sys, char **params) {
 
   Node *node = searchAVL(sys->avl, pid);
   if (!node) {
-    printf("Process not found!");
+    printf("Process not found!\n");
     return;
   }
   node->state = to;

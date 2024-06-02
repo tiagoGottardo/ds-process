@@ -1,5 +1,5 @@
 #include "../include/AVLtree.h"
-#include "../include/Log.h"
+// #include "../include/Log.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,24 +8,20 @@ DicioState diciostate[] = {
     {"BLOCKED", BLOCKED}, {"READY", READY}, {"EXECUTING", EXECUTING}};
 
 State evalState(char *s) {
-
-  for (int i = 0; diciostate[i].name != NULL; i++) {
-    if (strcmp(diciostate[i].name, s) == 0) {
+  for (int i = 0; diciostate[i].name; i++)
+    if (!strcmp(diciostate[i].name, s))
       return diciostate[i].val;
-    }
-  }
 
+  printf("That state do not exists!\n");
   return UNKNOWN;
 }
 
-void AVLlog(const char * text){
+void AVLlog(const char *text) {}
 
-}
-
-int height(struct BNode *N) {
-  if (N == NULL)
+int height(BNode *bnode) {
+  if (!bnode)
     return 0;
-  return N->height;
+  return bnode->height;
 }
 
 int max(int a, int b) { return (a > b) ? a : b; }
@@ -102,7 +98,6 @@ BNode *insertAVL(BNode *bnode, int key, Node *node) {
   else if (key > bnode->key)
     bnode->right = insertAVL(bnode->right, key, node);
   else {
-    printf("A process with that pid already exists!\n");
     return bnode;
   }
 
@@ -222,7 +217,6 @@ BNode *deleteAVL(BNode *root, int key) {
 
 Node *searchAVL(BNode *root, int pid) {
   if (!root) {
-    printf("Process not found in AVL Tree!\n");
     return NULL;
   }
 
