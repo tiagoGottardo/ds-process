@@ -4,8 +4,8 @@ clear
 
 gcc -I ./include ./src/*.c -o ./dsprocess 
 
-# trap 'rm -f ./dsprocess' EXIT INT
+trap 'rm -f ./dsprocess' EXIT INT
 
-# ./dsprocess 
+./dsprocess 
 
-# rm ./dsprocess
+rm ./dsprocess
