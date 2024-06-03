@@ -30,6 +30,7 @@ void logMessage(const char *fileName, const char *format, ...) {
   va_list args;
   va_start(args, format);
   vfprintf(logFile, format, args);
+  // vprintf(format, args);
   va_end(args);
 
   // Adicionar uma quebra de linha
