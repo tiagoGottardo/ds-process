@@ -1,10 +1,6 @@
 # ds-process
-Some data structure algorithms applied in process.
+Feito por Arthur Baldoqui e Tiago P.Gottardo
 
-To run app
+Para rodar o programa
 - chmod +x run.sh
 - ./run.sh
-
-To run integrated tests 
-- chmod +x tests.sh
-- ./tests.sh

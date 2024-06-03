@@ -58,7 +58,7 @@ Node *deleteMaxHeap(MaxHeap *heap, int pid) {
   Node *deleteItem;
 
   if (!heap->index) {
-    printf("Heap id empty.\n");
+    printf("O heap está vazio.\n");
     return NULL;
   }
 
@@ -85,6 +85,8 @@ void insertMaxHeap(MaxHeap *heap, Node *new) {
     } else {
       logMessage("log/heap.txt", "Limite atingido do max heap, dobrando capacidade");
 
+      //printf("DOBRANDO max heap");
+
       int newCapacity = heap->capacity * 2;
       Node **newVector = (Node **)malloc(newCapacity * sizeof(Node *));
 
@@ -103,6 +105,7 @@ void insertMaxHeap(MaxHeap *heap, Node *new) {
       } else {
         logMessage("log/heap.txt", "[ERRO}: Não foi possivel aumentar tamanho de max heap");
         printf("ERRO ao dobrar tamanho do heap");
+        //printf("ERRO ao dobrar tamanho do heap");
       }
     }
   }
