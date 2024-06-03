@@ -20,7 +20,7 @@ int main() {
     }
   }
 
-  if (!strcmp(input, "file")) {
+  if (!strcmp(input, "arquivo")) {
     while (1) {
       printf("Qual o nome do arquivo? ");
       scanf(" %[^\n]", input);
