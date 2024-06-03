@@ -43,11 +43,16 @@ HashMap *newHashMap() {
 }
 
 void deallocHashMap(HashMap *map) {
-  for (size_t i = 0; i < map->capacity; i++)
+  for (size_t i = 0; i < map->capacity; i++){
     free(map->entries[i].key);
+    map->entries[i].key=NULL;
+  }
+    
 
   free(map->entries);
+  map->entries=NULL;
   free(map);
+  map=NULL;
 }
 
 void *getHashMap(HashMap *map, char *key, bool isFnv, bool isLinear) {

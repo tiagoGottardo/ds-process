@@ -113,5 +113,7 @@ void printMaxHeap(MaxHeap *heap) {
 
 void deallocMaxHeap(MaxHeap *heap) {
   free(heap->vector);
+  heap->vector=NULL;
   free(heap);
+  heap=NULL;
 }

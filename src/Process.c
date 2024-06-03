@@ -238,9 +238,13 @@ void ListProcessByState(System *sys, char **params) {
 
 void FinalizeSystem(System *sys, char **params) {
   deallocHashMap(sys->quadraticFnv);
+  sys->quadraticFnv=NULL;
   deallocHashMap(sys->linearFnv);
+  sys->linearFnv=NULL;
   deallocHashMap(sys->linearDjb2);
+  sys->linearDjb2=NULL;
   deallocMaxHeap(sys->heap);
+  sys->heap=NULL;
   deallocAllTree(&sys->avl);
   free(params);
 
