@@ -10,23 +10,23 @@ int main() {
   char input[150];
 
   while (1) {
-    printf("Do you want to read a file or continue with CLI? (file/cli) ");
+    printf("Você quer ler de um arquivo ou continuar com a CLI? (arquivo/cli) ");
     scanf(" %[^\n]", input);
-    if (!strcmp(input, "file") || !strcmp(input, "cli")) {
+    if (!strcmp(input, "arquivo") || !strcmp(input, "cli")) {
       break;
     } else {
-      printf("You don't chose none of options.\n");
+      printf("Você não escolheu nenhuma das opções.\n");
       continue;
     }
   }
 
   if (!strcmp(input, "file")) {
     while (1) {
-      printf("What's file name? ");
+      printf("Qual o nome do arquivo? ");
       scanf(" %[^\n]", input);
       if (ReadFile(sys, input)) break;
       
-      printf("That file not exists!\n");
+      printf("Esse arquivo não existe!\n");
       continue;
       }
   } else {
@@ -38,7 +38,7 @@ int main() {
         Cli(sys);
         break;
       }
-      printf("You need to initiate system before do anything!\n");
+      printf("Primeiro você precisa iniciar o sistema!\n");
     }
   }
 

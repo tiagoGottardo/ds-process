@@ -9,11 +9,11 @@ char **split(char *s) {
     return NULL;
   };
   if (!s) {
-    printf("Empty input!\n");
+    printf("Input vazio!\n");
     return NULL;
   }
   if (s[0] == '/') {
-    printf("Just a comment!\n");
+    printf("Apenas um comentário!\n");
     return NULL;
   }
 
@@ -56,23 +56,20 @@ bool ReadFile(System *sys, char *filename) {
     if(sys == NULL){
       if(!strcmp(parameters[0], "Iniciar")){
         sys = InitializeSystem();
-        printf("System initialize\n");
+        printf("Sistema inicializado\n");
       } else {
-      printf("You need to initiate system before do anything!\n");
+      printf("Primeiro você precisa iniciar o sistema!\n");
       }
       continue;
     }
 
     fn = (Fn *)getHashMap(sys->functions, parameters[0], true, true);
     if (!fn) {
-      printf("That command do not exists!\n");
-      free(parameters[0]);
-      free(parameters);
+      printf("Isso não é um comando válido!\n");
       continue;
     }
     (*fn)(sys, parameters);
-    free(parameters[0]);
-    free(parameters);
+    printf("\n");
   }
 
   fclose(file);
@@ -94,7 +91,7 @@ void Cli(System *sys) {
 
     fn = (Fn *)getHashMap(sys->functions, parameters[0], true, true);
     if (!fn) {
-      printf("That command do not exists!\n");
+      printf("Isso não é um comando válido!\n");
       continue;
     }
     (*fn)(sys, parameters);

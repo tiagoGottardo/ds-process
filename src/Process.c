@@ -41,13 +41,13 @@ System *InitializeSystem() {
 
 int evalInt(char *s) {
   if (!s)
-    printf("Params not found!");
+    printf("Parâmetros não encontrados!");
 
   int result = atoi(s);
   if (!result && s[0] != '0')
-    printf("%s is not a number\n", s);
+    printf("%s não é um número!\n", s);
   if (result <= 0) {
-    printf("Just positive numbers!\n");
+    printf("Só aceitamos números positivos!\n");
     result = 0;
   }
 
@@ -57,7 +57,7 @@ int evalInt(char *s) {
 bool checkParams(char **params, int num) {
   for (int i = 1; i <= num; i++)
     if (!params[i]) {
-      printf("We need more params\n");
+      printf("Está faltando parâmetros\n");
       return false;
     }
 
@@ -114,7 +114,7 @@ void AddProcess(System *sys, char **params) {
   Node *search = searchAVL(sys->avl, pid);
 
   if (search) {
-    printf("A process with that pid already exists!\n");
+    printf("Um processo com esse PID já existe!\n");
     return;
   }
 
@@ -129,7 +129,7 @@ void AddProcess(System *sys, char **params) {
 
 void ListAVLProcess(System *sys, char **params) {
   if (!sys->avl)
-    printf("Nothing here yet!\n");
+    printf("Nada aqui ainda!\n");
   else {
     printf("----------------------------------------------- Process List "
            "-----------------------------------------------\n");
@@ -157,7 +157,7 @@ void RemoveProcess(System *sys, char **params) {
     deleteMaxHeap(sys->heap, node->pid);
     sys->avl = deleteAVL(sys->avl, node->pid);
   } else {
-    printf("Process not found!\n");
+    printf("Processo não encontrado!\n");
   }
 }
 
@@ -176,7 +176,7 @@ void ChangePriority(System *sys, char **params) {
     node->priority = newPriority;
     insertMaxHeap(sys->heap, node);
   } else {
-    printf("Process not found!\n");
+    printf("Processo não encontrado!\n");
   }
 }
 
@@ -189,13 +189,13 @@ void RemoveProcessOfMaxPriority(System *sys, char **params) {
     deleteMaxHeap(sys->heap, node->pid);
     sys->avl = deleteAVL(sys->avl, node->pid);
   } else {
-    printf("Process not found!\n");
+    printf("Processo não encontrado!\n");
   }
 }
 
 void ListProcessByPriority(System *sys, char **params) {
   if (!sys->heap->index)
-    printf("Nothing here yet!\n");
+    printf("Nada aqui ainda!\n");
   else {
     printf("----------------------------------------------- Process List "
            "-----------------------------------------------\n");
@@ -210,7 +210,7 @@ void ListProcessByPriority(System *sys, char **params) {
 void ChangeState(System *sys, int pid, State state) {
   Node *node = searchAVL(sys->avl, pid);
   if (!node) {
-    printf("Process not found!\n");
+    printf("Processo não encontrado!\n");
     return;
   }
   node->state = state;
@@ -224,7 +224,7 @@ void ListProcessByState(System *sys, char **params) {
     return;
 
   if (!sys->quadraticFnv->length) {
-    printf("Nothing here yet!\n");
+    printf("Nada aqui ainda!\n");
     return;
   }
   printf("----------------------------------------------- Process List "
@@ -248,6 +248,6 @@ void FinalizeSystem(System *sys, char **params) {
   deallocAllTree(&sys->avl);
   free(params);
 
-  printf("Program finalized!\n");
+  printf("Programa finalizado!\n");
   exit(0);
 }

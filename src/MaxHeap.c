@@ -56,7 +56,7 @@ Node *deleteMaxHeap(MaxHeap *heap, int pid) {
   Node *deleteItem;
 
   if (!heap->index) {
-    printf("Heap id empty.\n");
+    printf("O heap está vazio.\n");
     return NULL;
   }
 
@@ -81,7 +81,7 @@ void insertMaxHeap(MaxHeap *heap, Node *new) {
       insertHelper(heap, heap->index++);
     } else {
 
-      printf("DOBRANDO max heap");
+      //printf("DOBRANDO max heap");
 
       int newCapacity = heap->capacity * 2;
       Node **newVector = (Node **)malloc(newCapacity * sizeof(Node *));
@@ -99,7 +99,7 @@ void insertMaxHeap(MaxHeap *heap, Node *new) {
         heap->vector[heap->index] = new;
         insertHelper(heap, heap->index++);
       } else {
-        printf("ERRO ao dobrar tamanho do heap");
+        //printf("ERRO ao dobrar tamanho do heap");
       }
     }
   }
