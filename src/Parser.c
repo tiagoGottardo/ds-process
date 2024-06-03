@@ -1,4 +1,5 @@
 #include "../include/Process.h"
+#include "../include/Log.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,6 +71,7 @@ bool ReadFile(System *sys, char *filename) {
       free(parameters);
       continue;
     }
+    logMessage("log/log.txt", "Chamando função: %s", parameters[0]);
     (*fn)(sys, parameters);
     free(parameters[0]);
     free(parameters);
@@ -94,9 +96,14 @@ void Cli(System *sys) {
 
     fn = (Fn *)getHashMap(sys->functions, parameters[0], true, true);
     if (!fn) {
+      free(parameters[0]);
+      free(parameters);
       printf("That command do not exists!\n");
       continue;
     }
+    logMessage("log/log.txt", "Chamando função: %s", parameters[0]);
     (*fn)(sys, parameters);
+    free(parameters[0]);
+    free(parameters);
   }
 }

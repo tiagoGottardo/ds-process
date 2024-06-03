@@ -24,7 +24,6 @@ HashMap *InitializeFunctions() {
 };
 
 System *InitializeSystem() {
-  logMessage("log/log.txt", "Iniciando sistema");
   System *sys = (System *)calloc(1, sizeof(System));
 
   logMessage("log/hash1.txt", "Iniciando hashmap/quadraticFnv");
@@ -108,10 +107,13 @@ void AddProcess(System *sys, char **params) {
   char *name = params[2];
   int priority = evalInt(params[3]);
   State state = evalState(params[4]);
+  
   if (!pid || !priority || state == UNKNOWN)
     return;
 
   Node *search = searchAVL(sys->avl, pid);
+
+  logMessage("log/log.txt", "Processo adicionado com parametros, %d %s %d", pid, name, priority);
 
   if (search) {
     printf("A process with that pid already exists!\n");
@@ -148,6 +150,8 @@ void RemoveProcess(System *sys, char **params) {
   int pid = evalInt(params[1]);
   if (!pid)
     return;
+
+  logMessage("log/log.txt", "Processo adicionado com pid: %d", pid);
 
   Node *node = searchAVL(sys->avl, pid);
   if (node) {
